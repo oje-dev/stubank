@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-import numpy as np
 from pandas import DataFrame
 from sklearn import linear_model
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import KFold
+from sklearn.linear_model import LinearRegression
+
 import datetime as dt
+
+from sklearn.preprocessing import PolynomialFeatures
 
 import getdata
 import pandas as pd
@@ -52,21 +52,16 @@ for i in df:
     predicted= z_pred[-1][0]
     if predicted<0:
         predicted=0
-
+    #polynomial regression
+    # poly_reg = PolynomialFeatures(degree=3)
+    # X_poly = poly_reg.fit_transform(X)
+    # pol_reg = LinearRegression()
+    # pol_reg.fit(X_poly, y)
+    # polyresult=pol_reg.predict(poly_reg.fit_transform([[nextmonth]]))[0][0]
+    # polynomialgraph=seperated.append({'date' : nextmonth , 'amount' : zzz} , ignore_index=True)
+    # polynomialgraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" poly")
     predictiongraph=seperated.append({'date' : nextmonth , 'amount' : predicted} , ignore_index=True)
-    # The coefficients
-    # y_pred = regr.predict(X_test)
-    #print('Coefficients: \n', regr.coef_)
-    # The mean squared error
-    #print('Mean squared error: %.2f'%mean_squared_error(y_test, y_pred))
-    # The coefficient of determination: 1 is perfect prediction
-    #print('Coefficient of determination: %.2f'%r2_score(y_test, y_pred))
-    # plt.scatter(X_test, y_test,  color='black')
-    # plt.plot(X_test, y_pred, color='blue', linewidth=3,label=subdf["recipient"].iloc[0])
-    # plt.xticks(())
-    # plt.yticks(())
-    # plt.show()
-    predictiongraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" Predicted")
+    predictiongraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" linear")
     plt.show()
     totals.append([recipient,predicted])
     print(totals[-1])
@@ -74,3 +69,4 @@ total=0
 for i in totals:
     total+=i[1]
 print("Total expected spending is :"+str(total))
+print("Total poly expected spending is :"+str(totalpoly))
