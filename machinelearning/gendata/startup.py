@@ -8,5 +8,4 @@ def gen():
     print("...")
     print("Generating dates...")
     result = datehandler.gendates(startdate, enddate)
-    #result = datehandler.gendates("21/06/2001", "21/06/2002")
     return result
