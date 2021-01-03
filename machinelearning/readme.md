@@ -1,4 +1,4 @@
-Predict spending: markov chain models <br>
+Predict spending: linear regression<br>
 detect fraud: kmeans
 
 packages to be used:

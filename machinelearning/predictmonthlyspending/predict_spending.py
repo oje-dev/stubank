@@ -1,17 +1,11 @@
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from sklearn import linear_model
-from sklearn.linear_model import LinearRegression
-
 import datetime as dt
-
-from sklearn.preprocessing import PolynomialFeatures
-
 import getdata
 import pandas as pd
 
 
-# Load the diabetes dataset
 df = getdata.getdata()
 dates=df[1]
 df=df[0]
@@ -33,40 +27,30 @@ for i in df:
     X["date"]=pd.to_datetime(X["date"])
     X["date"]=X["date"].map(dt.datetime.toordinal)
     y = pd.DataFrame(seperated['amount'])
-    # Split the data into training/testing sets
-    X_train = X[:-5]
-    X_test = X[-5:]
-    # Split the targets into training/testing sets
-    y_train = y[:-5]
-    y_test = y[-5:]
-    regr = linear_model.LinearRegression()
-    # Train the model using the training sets
-    regr.fit(X_train, y_train)
     # Make predictions using the testing set
-    realthing=linear_model.LinearRegression()
-    realthing.fit(X,y)
+    linearregression=linear_model.LinearRegression()
+    linearregression.fit(X,y)
     nextmonth=X["date"].iloc[-1]+30
-    Z=X_test.iloc[1:]
-    Z = Z.append({'date' : nextmonth} , ignore_index=True)
-    z_pred = realthing.predict(Z)
-    predicted= z_pred[-1][0]
+    predicted = linearregression.predict([[nextmonth]])[-1][0]
     if predicted<0:
         predicted=0
+    print(predicted)
     #polynomial regression
-    # poly_reg = PolynomialFeatures(degree=3)
+    # poly_reg = PolynomialFeatures(degree=5)
     # X_poly = poly_reg.fit_transform(X)
     # pol_reg = LinearRegression()
     # pol_reg.fit(X_poly, y)
     # polyresult=pol_reg.predict(poly_reg.fit_transform([[nextmonth]]))[0][0]
-    # polynomialgraph=seperated.append({'date' : nextmonth , 'amount' : zzz} , ignore_index=True)
+    # print("poly",polyresult)
+    # print("linear",predicted)
+    # polynomialgraph=seperated.append({'date' : nextmonth , 'amount' : polyresult} , ignore_index=True)
     # polynomialgraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" poly")
+    # plt.show()
     predictiongraph=seperated.append({'date' : nextmonth , 'amount' : predicted} , ignore_index=True)
-    predictiongraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" linear")
+    predictiongraph.plot(x ='date', y='amount', kind ='line',marker='x',title=recipient+" predicted")
     plt.show()
     totals.append([recipient,predicted])
-    print(totals[-1])
 total=0
 for i in totals:
     total+=i[1]
 print("Total expected spending is :"+str(total))
-print("Total poly expected spending is :"+str(totalpoly))
