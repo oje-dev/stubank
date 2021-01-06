@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 from sklearn import linear_model
 import datetime as dt
-import getdata
+from getdata import getdata
 import pandas as pd
 
 
-df = getdata.getdata()
+df = getdata()
 dates=df[1]
 df=df[0]
 dates["date"]=pd.to_datetime(dates["date"])
