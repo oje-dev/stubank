@@ -1,15 +1,13 @@
 # import libraries
 from dateutil.relativedelta import relativedelta
 from sklearn import linear_model
-import datetime as dt
-import pandas as pd
 from pandas import DataFrame
-import datetime
+import datetime, pandas as pd, sys, json, numpy as np
 
 
-def getdata():
+def getdata(df):
     # read in data from csv and sort by data
-    df = pd.read_csv('1.csv', parse_dates=['date'])
+    df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values(by='date', ascending=False)
     # get first and last date
     firstdate = df["date"].iloc[-1]
@@ -45,9 +43,9 @@ def gendates(startdate, enddate):
     return (result)
 
 
-def predict():
+def predict(transactions):
     # get dates and transactions
-    df = getdata()
+    df = getdata(transactions)
     dates = df[1]
     df = df[0]
     # convert dates to datetime format
@@ -79,7 +77,7 @@ def predict():
         # get the month to predict
         nextmonth = X["date"].iloc[-1] + relativedelta(months=+1)
         # convert dates to ordinal
-        X["date"] = X["date"].map(dt.datetime.toordinal)
+        X["date"] = X["date"].map(datetime.datetime.toordinal)
         nextmonth = nextmonth.toordinal()
         # set y as amount spent
         y = pd.DataFrame(seperated['amount'])
@@ -92,7 +90,24 @@ def predict():
         if predicted < 0:
             predicted = 0
         # append to totals
-        totals.append([recipient, predicted])
-    # return totals and their name
-    return totals
+        totals.append([recipient, predicted]) 
+    # get total and return
+    total = 0
+    for i in totals:
+        total += i[1]
+    return total
 
+
+def main():
+    #get our data from Node
+    nodedata = sys.stdin.readlines()
+    d=json.loads(nodedata[0])
+    #create a data frame and send to predict
+    df = pd.DataFrame(d['transactions'])
+    total=predict(df)
+    #output to Node
+    print("{:.2f}".format(total))
+
+
+if __name__ == '__main__':
+    main()
