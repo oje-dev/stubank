@@ -1,8 +1,7 @@
 const WebSocket = require('ws');
-var ws = new WebSocket('ws://0.0.0.0:5001/');
-console.log("Connected!");
+var ws
 
-function req(jsondata) {
+async function req(jsondata) {
   const obj = JSON.stringify(jsondata);
   ws.on('open', function open() {
     ws.send(obj);
@@ -13,8 +12,12 @@ function req(jsondata) {
     });
   })
 }
-exports.req = req;
 
+async function getdata(socket,data) {
+  //await client.start('ws://0.0.0.0:5001/');
+  ws = new WebSocket(socket);
+  hot = await req(data);
+  return hot;
+}
 
-
-
+exports.getdata=getdata;

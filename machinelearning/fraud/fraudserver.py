@@ -19,7 +19,7 @@ def handle(ws):
             break
         data=json.loads(m)
         amount=start(data)
-        ws.send(amount)
+        return ws.send(amount)
 
 
 def dispatch(environ, start_response):

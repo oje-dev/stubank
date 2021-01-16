@@ -845,16 +845,11 @@ var data = {
     "amount": 24.0
   }]
 };
-const obj = JSON.stringify(data)
-const WebSocket = require('ws');
-console.time("time:")
-const ws = new WebSocket('ws://0.0.0.0:5000/');
 
-ws.on('open', function open() {
-  ws.send(obj);
-});
+console.time("h")
+const client = require('./client');
 
-ws.on('message', function incoming(data) {
-  console.log(data);
-  console.timeEnd("time:")
+(client.getdata('ws://0.0.0.0:5001/',data)).then(function(value) {
+  // console.log(value)
+  console.timeEnd("h")
 });
