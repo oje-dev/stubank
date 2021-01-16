@@ -1,8 +1,11 @@
 # import libraries
+import dateutil
+import datetime, pandas as pd, sys, json, numpy as np
 from dateutil.relativedelta import relativedelta
 from sklearn import linear_model
 from pandas import DataFrame
-import datetime, pandas as pd, sys, json, numpy as np
+import time
+
 
 
 def getdata(df):
@@ -15,10 +18,6 @@ def getdata(df):
     # generate array of dates and put it in a data frame
     dates = gendates(firstdate, lastdate)
     dates = DataFrame(dates, columns=['recipient', 'date', 'amount'])
-    # remove empty purchases in csv
-    for index, row in df.iterrows():
-        if row['amount'] == 0:
-            df.drop(index, inplace=True)
     # group by recipient and flip order
     g = df.groupby(pd.Grouper(key='recipient'))
     dfs = [group for _, group in g]
@@ -98,16 +97,13 @@ def predict(transactions):
     return total
 
 
-def main():
+def start(d):
+    start = time.time()
     #get our data from Node
-    nodedata = sys.stdin.readlines()
-    d=json.loads(nodedata[0])
     #create a data frame and send to predict
     df = pd.DataFrame(d['transactions'])
     total=predict(df)
     #output to Node
-    print("{:.2f}".format(total))
-
-
-if __name__ == '__main__':
-    main()
+    return("{:.2f}".format(total))
+    end = time.time()
+    #print(end - start)

@@ -2,12 +2,8 @@ from sklearn.neighbors import LocalOutlierFactor
 import datetime, pandas as pd, sys, json, numpy as np
 
 
-def getdata(df):
-    df["date"] = pd.to_datetime(df["date"])
-    df = df.sort_values(by='amount', ascending=False)
-    for index, row in df.iterrows():
-        if row['amount'] == 0:
-            df.drop(index, inplace=True)
+
+def groupdata(df):
     g = df.groupby(pd.Grouper(key='recipient'))
     dfs = [group for _, group in g]
     dfs = dfs[::-1]
@@ -15,8 +11,7 @@ def getdata(df):
 
 
 def fraudcheck(df, tocheck):
-    dfs = getdata(df)
-    tocheck = tocheck.drop(columns=['date'])
+    dfs = groupdata(df)
     anomaly = False
     for i in dfs:
         recipient = i["recipient"].iloc[0]
@@ -30,30 +25,22 @@ def fraudcheck(df, tocheck):
                 cls.fit(array)
                 isoutlier = cls.decision_function([[tocheck['amount'].values[0]]])
                 realnum = isoutlier / -10000000000
-                print(realnum)
+                # print(realnum)
+                # this is half the distance
                 if realnum > 75:
                     anomaly = True
             else:
                 anomaly = True
-
-    if anomaly == False:
-        return False
-    else:
-        return True
+            break
+    return anomaly
 
 
-def main():
-    # get our data from Node
-    nodedata = sys.stdin.readlines()
-    d = json.loads(nodedata[0])
-    # create a data frame and send to predict
+def start(d):
+    #get our data from Node
+    #create a data frame and send to predict
     df = pd.DataFrame(d['transactions'])
-    # result=fraudcheck(df)
     tocheck = df.tail(1)
     result = fraudcheck(df, tocheck)
-    # output to Node
-    print(result)
-
-
-if __name__ == '__main__':
-    main()
+    #output to Node
+    return(str(result))
+    #print(end - start)
