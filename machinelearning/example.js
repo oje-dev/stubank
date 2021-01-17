@@ -845,11 +845,18 @@ var data = {
     "amount": 24.0
   }]
 };
+//remember to stringify JSON data first
+const obj = JSON.stringify(data);
+//make sure to require the correct client with the correct path
+//const client = require('./fraud/fraudclient');
+const client = require('./predict/predictclient');
 
-console.time("h")
-const client = require('./client');
+// example function to handle output
+function handleResult(msg){
 
-(client.getdata('ws://0.0.0.0:5001/',data)).then(function(value) {
-  // console.log(value)
-  console.timeEnd("h")
-});
+}
+
+// calling the websocket
+client.req(obj,handleResult)
+
+

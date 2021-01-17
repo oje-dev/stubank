@@ -4,26 +4,26 @@ from eventlet import websocket
 import json
 from predict_spending import start
 
-# demo app
-import os
-import random
-
 
 @websocket.WebSocketWSGI
 def handle(ws):
+    #check for message
     while True:
         m = ws.wait()
         if m is None:
             break
+        #if message recieved run predict spending on it and return the value, closing the websocket
         data=json.loads(m)
         amount=start(data)
         return ws.send(amount)
 
 
 def dispatch(environ, start_response):
+    #on request respond with handle
     return handle(environ, start_response)
 
+
 if __name__ == "__main__":
-    # run an example app from the command line
+    #set the ip and port to listen on 
     listener = eventlet.listen(('0.0.0.0', 5000))
     wsgi.server(listener, dispatch)

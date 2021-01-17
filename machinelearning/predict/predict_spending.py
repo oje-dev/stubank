@@ -98,12 +98,9 @@ def predict(transactions):
 
 
 def start(d):
-    start = time.time()
-    #get our data from Node
-    #create a data frame and send to predict
+    #convert our data from node to a dataframe
     df = pd.DataFrame(d['transactions'])
+    #pass this dataframe to predict
     total=predict(df)
     #output to Node
     return("{:.2f}".format(total))
-    end = time.time()
-    #print(end - start)

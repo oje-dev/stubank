@@ -4,31 +4,26 @@ from eventlet import websocket
 import json
 from checktransaction import start
 
-# demo app
-import os
-import random
-
 
 @websocket.WebSocketWSGI
 def handle(ws):
-    """  This is the websocket handler function.  Note that we
-    can dispatch based on path in here, too."""
+    #check for message
     while True:
         m = ws.wait()
         if m is None:
             break
+        #if message recieved run check transaction on it and return the value, closing the websocket
         data=json.loads(m)
         amount=start(data)
         return ws.send(amount)
 
 
 def dispatch(environ, start_response):
-    """ This resolves to the web page or the websocket depending on
-    the path."""
+    #on request respond with handle
     return handle(environ, start_response)
 
+
 if __name__ == "__main__":
-    # run an example app from the command line
-    listener = eventlet.listen(('0.0.0.0', 5001))
-    print("\nVisit http://localhost:5000/ in your websocket-capable browser.\n")
+    #set the ip and port to listen on 
+    listener = eventlet.listen(('0.0.0.0', 5007))
     wsgi.server(listener, dispatch)

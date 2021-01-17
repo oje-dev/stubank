@@ -2,31 +2,30 @@ from sklearn.neighbors import LocalOutlierFactor
 import datetime, pandas as pd, sys, json, numpy as np
 
 
+def fraudcheck(df, tocheck):
 
-def groupdata(df):
+    #groups data by recipient
     g = df.groupby(pd.Grouper(key='recipient'))
     dfs = [group for _, group in g]
-    dfs = dfs[::-1]
-    return dfs
-
-
-def fraudcheck(df, tocheck):
-    dfs = groupdata(df)
     anomaly = False
+    #loops through recipients
     for i in dfs:
+        # checks if the recipient is the same as the transaction to check
         recipient = i["recipient"].iloc[0]
         if tocheck['recipient'].values[0] == recipient:
+            # checks if it is the only transaction from the recipient
             if len(i.index) > 1:
-                i = i.drop(columns=['recipient'])
+                # get the amounts from the transactions and reshape the array
                 amounts = i["amount"].values
                 array = np.array(amounts)
                 array = array.reshape(array.shape[0], -1)
+                # fit the machine learning
                 cls = LocalOutlierFactor(n_neighbors=2, novelty=True)
                 cls.fit(array)
+                # return machine learning value and convert to decimal
                 isoutlier = cls.decision_function([[tocheck['amount'].values[0]]])
                 realnum = isoutlier / -10000000000
-                # print(realnum)
-                # this is half the distance
+                # check if the value is within a specified local outlier factor (this is half the distance)
                 if realnum > 75:
                     anomaly = True
             else:
@@ -36,11 +35,10 @@ def fraudcheck(df, tocheck):
 
 
 def start(d):
-    #get our data from Node
-    #create a data frame and send to predict
+    #create a data frame from data and get the transaction to check
     df = pd.DataFrame(d['transactions'])
     tocheck = df.tail(1)
+    #pass to check transaction
     result = fraudcheck(df, tocheck)
     #output to Node
     return(str(result))
-    #print(end - start)
