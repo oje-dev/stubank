@@ -1,0 +1,6 @@
+{
+    "mongoURI": "mongodb+srv://csc2033-team45:zGJGmLeM6iIbL9Yg@stubank.em9vj.mongodb.net/StuBank?retryWrites=true&w=majority",
+    "jwtSecret": "stubanksupersecret",
+    "passphrase": "stubank",
+    "emailSalt": "$2a$10$YiZ.m0U5TL7vJVe5gq0XDe"
+}
