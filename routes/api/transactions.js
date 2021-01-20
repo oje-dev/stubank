@@ -48,7 +48,7 @@ router.post("/", auth, async (req, res) => {
         .status(400)
         .json({ msg: "Cannot send to and from the same account" });
     }
-
+  
     const updateSender = {};
     updateSender.currentBalance = account.currentBalance - amount;
 
@@ -94,3 +94,37 @@ router.get("/", auth, async (req, res) => {
 });
 
 module.exports = router;
+
+// For predict:
+// const predictClient = require('./predict/predictclient');
+
+// get all the transactions (most recent last) then stringify
+// const transactions = await Transaction.find({ userId: req.user.id }).sort({
+//   date: 1,
+// });
+
+// const obj = JSON.stringify(data);
+// call client
+// predictClient.req(obj,(msg)=>{})
+
+//function that will run when server responds
+// function handlePredict(msg){
+// }
+
+
+// For transaction:
+// const predictClient = require('./predict/predictclient');
+
+// get all the transactions (most recent last) then stringify
+// const transactions = await Transaction.find({ userId: req.user.id }).sort({
+//   date: 1,
+// });
+
+// const obj = JSON.stringify(data);
+// call client
+// predictClient.req(obj,handlePredict)
+
+//function that will run when server responds
+// function handlePredict(msg){
+// }
+

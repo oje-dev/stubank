@@ -845,18 +845,21 @@ var data = {
     "amount": 24.0
   }]
 };
+
 //remember to stringify JSON data first
 const obj = JSON.stringify(data);
 //make sure to require the correct client with the correct path
-//const client = require('./fraud/fraudclient');
-const client = require('./predict/predictclient');
+//const client = require('../machinelearning/fraud/fraudclient');
+const client = require('../machinelearning/predict/predictclient');
 
-// example function to handle output
-function handleResult(msg){
-
-}
-
-// calling the websocket
-client.req(obj,handleResult)
-
-
+test('Identifies Fraud Transaction', done => {
+  function callback(data) {
+    try {
+      expect(data).toBe('True');
+      done();
+    } catch (error) {
+      done(error);
+    }
+  }
+  client.req(obj,(data)=>{(callback(data))});
+});

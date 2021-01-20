@@ -4,6 +4,7 @@
   "description": "Test register form for StuBank",
   "main": "server.js",
   "scripts": {
+    "test": "jest",
     "start": "node server",
     "server": "nodemon server",
     "client": "npm start --prefix client",
