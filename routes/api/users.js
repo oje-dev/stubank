@@ -19,7 +19,6 @@ const {
   requirePassword,
   requirePasswordConfirmation,
 } = require("../../middleware/validators/registration");
-const { returnToken } = require("../genWebToken");
 
 // Import DB
 const User = require("../../models/User");
