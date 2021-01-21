@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 
+const predictClient = require("../../machinelearning/predict/predictclient");
+const fraudClient = require("../../machinelearning/fraud/fraudclient");
+
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
 
@@ -48,7 +51,7 @@ router.post("/", auth, async (req, res) => {
         .status(400)
         .json({ msg: "Cannot send to and from the same account" });
     }
-  
+
     const updateSender = {};
     updateSender.currentBalance = account.currentBalance - amount;
 
@@ -59,6 +62,13 @@ router.post("/", auth, async (req, res) => {
 
     await recipient.updateOne({ $set: updateReciever }, { new: true });
 
+    const transactions = await Transaction.find({
+      userId: req.user.id,
+      sentTo,
+    }).select("amount");
+
+    console.log(transactions);
+
     transaction = new Transaction(transactionFields);
 
     // Save to DB
@@ -66,7 +76,7 @@ router.post("/", auth, async (req, res) => {
     await account.save();
     await recipient.save();
 
-    res.json(transaction);
+    res.json(transactions);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -93,24 +103,20 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-module.exports = router;
-c
-// For predict:
-// const predictClient = require('./predict/predictclient');
+// @route GET api/transactions/predict
+// @desc Predict future spending
+// @access Private
+router.get("/predict", auth, async (req, res) => {
+  const transactions = await Transaction.find({ userId: req.user.id }).sort({
+    date: 1,
+  });
 
-// get all the transactions (most recent last) then stringify
-// const transactions = await Transaction.find({ userId: req.user.id }).sort({
-//   date: 1,
-// });
+  const stringifiedTransaction = JSON.stringify(transactions);
 
-// const obj = JSON.stringify(data);
-// call client
-// predictClient.req(obj,(msg)=>{})
-
-//function that will run when server responds
-// function handlePredict(msg){
-// }
-
+  predictClient.req(stringifiedTransaction, (predictionAmount) => {
+    res.send(predictionAmount);
+  });
+});
 
 // For transaction:
 // const predictClient = require('./predict/predictclient');
@@ -128,3 +134,4 @@ c
 // function handlePredict(msg){
 // }
 
+module.exports = router;
