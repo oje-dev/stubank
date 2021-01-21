@@ -10,16 +10,16 @@ import time
 
 def getdata(df):
     # read in data from csv and sort by data
-    df["date"] = pd.to_datetime(df["date"])
+    df["date"] = pd.to_datetime(df["date"]).dt.tz_convert(None)
     df = df.sort_values(by='date', ascending=False)
     # get first and last date
     firstdate = df["date"].iloc[-1]
     lastdate = df["date"].iloc[0]
     # generate array of dates and put it in a data frame
     dates = gendates(firstdate, lastdate)
-    dates = DataFrame(dates, columns=['recipient', 'date', 'amount'])
+    dates = DataFrame(dates, columns=['sentTo', 'date', 'amount'])
     # group by recipient and flip order
-    g = df.groupby(pd.Grouper(key='recipient'))
+    g = df.groupby(pd.Grouper(key='sentTo'))
     dfs = [group for _, group in g]
     dfs = dfs[::-1]
     return dfs, dates
@@ -53,14 +53,14 @@ def predict(transactions):
     # loop through each recipient
     for i in df:
         # get recipient name
-        recipient = i["recipient"].iloc[0]
+        sentTo = i["sentTo"].iloc[0]
         # combine dates and the original datafram
         frames = [i, dates]
         i = pd.concat(frames)
         # sort datafram by date
         i = i.sort_values(by='date', ascending=False)
         # group transactions by month
-        subdf = DataFrame(i, columns=['recipient', 'date', 'amount'])
+        subdf = DataFrame(i, columns=['sentTo', 'date', 'amount'])
         g = subdf.groupby(pd.Grouper(key='date', freq="M"))
         dfs = [group for _, group in g]
         # initialise month totals
@@ -89,7 +89,7 @@ def predict(transactions):
         if predicted < 0:
             predicted = 0
         # append to totals
-        totals.append([recipient, predicted]) 
+        totals.append([sentTo, predicted]) 
     # get total and return
     total = 0
     for i in totals:
@@ -99,8 +99,8 @@ def predict(transactions):
 
 def start(d):
     #convert our data from node to a dataframe
-    df = pd.DataFrame(d['transactions'])
+    df = pd.DataFrame(d)
     #pass this dataframe to predict
     total=predict(df)
-    #output to Node
+    # #output to Node
     return("{:.2f}".format(total))

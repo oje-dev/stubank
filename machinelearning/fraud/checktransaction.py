@@ -26,8 +26,9 @@ def fraudcheck(amounts, tocheck):
 
 def start(d):
     #create a data frame from data and get the transaction to check
-    df = pd.DataFrame(d['transactions'])
-    tocheck = df.tail(1)
+    df = pd.DataFrame(d)
+    del df['_id']
+    tocheck = df.tail(1)#["amount"].values
     df=df.drop(df.tail(1).index)
     #pass to check transaction
     result = fraudcheck(df, tocheck)

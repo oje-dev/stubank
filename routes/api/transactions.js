@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
-
-const predictClient = require("../../machinelearning/predict/predictclient");
-const fraudClient = require("../../machinelearning/fraud/fraudclient");
-
+const client = require("../../machinelearning/client");
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
 
@@ -66,17 +63,24 @@ router.post("/", auth, async (req, res) => {
       userId: req.user.id,
       sentTo,
     }).select("amount");
-
-    console.log(transactions);
-
-    transaction = new Transaction(transactionFields);
-
-    // Save to DB
-    await transaction.save();
-    await account.save();
-    await recipient.save();
-
-    res.json(transactions);
+    transactions.push({"_id":0,"amount":amount})
+    const stringifiedTransactions = JSON.stringify(transactions);
+    // returns isAnomalous, true is an anomaly, false is a 'real' transaction
+    client.req(stringifiedTransactions,'ws://0.0.0.0:5007/', async(isAnomalous) => {
+      if (isAnomalous==="True"){
+        //send a 2FA request
+        res.send("Please complete 2FA");
+      }
+      else{
+      // a 2FA check would go here and else would be removed and if it was completed: this code would run:
+      transaction = new Transaction(transactionFields);
+      // Save to DB
+      await transaction.save();
+      await account.save();
+      await recipient.save();
+      res.json(transaction);
+    }
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -107,13 +111,9 @@ router.get("/", auth, async (req, res) => {
 // @desc Predict future spending
 // @access Private
 router.get("/predict", auth, async (req, res) => {
-  const transactions = await Transaction.find({ userId: req.user.id }).sort({
-    date: 1,
-  });
-
+  const transactions = await Transaction.find({ userId: req.user.id });
   const stringifiedTransaction = JSON.stringify(transactions);
-
-  predictClient.req(stringifiedTransaction, (predictionAmount) => {
+  client.req(stringifiedTransaction,'ws://0.0.0.0:5003/', (predictionAmount) => {
     res.send(predictionAmount);
   });
 });
