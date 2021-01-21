@@ -1,5 +1,6 @@
 //start websocket  and remove max listener cap
 const WebSocket = require('ws');
+//code cannot be abstracted because this line cannot be in a function. or passed to a function without causing a listener issue.
 var ws = new WebSocket('ws://0.0.0.0:5000/');
 ws.setMaxListeners(0)
 
