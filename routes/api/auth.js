@@ -1,60 +1,36 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 const config = require("config");
-const { check, validationResult } = require("express-validator");
-const auth = require("../../middleware/auth");
+
+const {
+  requireEmailExists,
+  requireValidPassword,
+} = require("../../middleware/validators/login");
 
 const User = require("../../models/User");
 
-const encryptionTool = require("../../utils/encryptiontool");
+const router = express.Router();
 
 // @route   POST api/auth
 // @desc    User login
 // @access  Public
 router.post(
   "/",
-  [
-    check("email", "Please include a valid email").isEmail(),
-    check("password", "Password is required").exists(),
-  ],
+  [requireEmailExists, requireValidPassword],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
-
-    const emailHashed = (
-      await bcrypt.hash(email, config.get("emailSalt"))
-    ).toString();
-
     try {
-      // See if the user exists
+      const emailHashed = (
+        await bcrypt.hash(req.body.email, config.get("emailSalt"))
+      ).toString();
+
       let user = await User.findOne({ emailHashed });
-
-      if (!user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Invalid credentials" }] });
-      }
-
-      const isMatch = await bcrypt.compare(
-        password,
-        encryptionTool.decryptMessage(
-          "/keys/privatekey.pem",
-          config.get("passphrase"),
-          user.password
-        )
-      );
-
-      if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Invalid credentials" }] });
-      }
 
       // Return jsonwebtoken
       const payload = {
@@ -78,19 +54,5 @@ router.post(
     }
   }
 );
-
-// @route   GET api/auth
-// @desc    Test auth middleware
-// @access  Private
-router.get("/", auth, async (req, res) => {
-  try {
-    // Displays user info except password
-    const user = await User.findById(req.user.id).select("-password");
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
 
 module.exports = router;
