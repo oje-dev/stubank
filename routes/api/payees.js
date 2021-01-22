@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const config = require("config");
 
 const auth = require("../../middleware/auth");

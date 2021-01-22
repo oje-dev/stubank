@@ -17,6 +17,18 @@ const AccountSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  cardNumber: {
+    type: String,
+    required: "true",
+  },
+  accountNumber: {
+    type: String,
+    required: true,
+  },
+  sortCode: {
+    type: String,
+    default: "01-01-01",
+  },
 });
 
 module.exports = Account = mongoose.model("account", AccountSchema);

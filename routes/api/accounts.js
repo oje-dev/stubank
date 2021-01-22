@@ -2,6 +2,7 @@ const express = require("express");
 
 const auth = require("../../middleware/auth");
 const Account = require("../../models/Account");
+const { genDetails } = require("../cardDetails");
 
 const router = express.Router();
 
@@ -17,6 +18,8 @@ router.post("/", auth, async (req, res) => {
   accountFields.userId = req.user.id;
   if (currentBalance) accountFields.currentBalance = currentBalance;
   if (savingsAccount) accountFields.savingsAccount = savingsAccount;
+  accountFields.cardNumber = genDetails(16);
+  accountFields.accountNumber = genDetails(8);
 
   try {
     account = new Account(accountFields);
