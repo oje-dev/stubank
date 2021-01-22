@@ -1,0 +1,146 @@
+html,
+body {
+  height: 100%;
+  background: url(landingpageimage.png) center center fixed;
+  background-size: cover;
+}
+
+.btns {
+  margin: 10px;
+}
+
+.backgroundContainer {
+  height: 100vh;
+}
+
+.btnCreateAccount {
+  margin-right: 10px;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.btnLogin {
+  margin-left: 10px;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.stubankText {
+  color: white;
+  font-size: 55px;
+}
+
+.sloganText {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.twofaText {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.createAccountForm {
+  color: white;
+}
+
+.createAccountForm input {
+  margin: 5px 2px 5px 2px;
+}
+
+.createAccountForm {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.createAccountTitle {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.loginForm {
+  color: white;
+}
+
+.loginForm div {
+  margin: 2.5px 0px 2.5px 0px;
+}
+
+.createAccountTitle {
+  font-size: 1.1em;
+  margin-top: 10px;
+}
+
+.fade-in {
+  animation: fadeIn ease 0.4s;
+  -webkit-animation: fadeIn ease 0.4s;
+  -moz-animation: fadeIn ease 0.4s;
+  -o-animation: fadeIn ease 0.4s;
+  -ms-animation: fadeIn ease 0.4s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.showOutline {
+  border: dashed 0.5px red;
+}
+
+.my-container {
+  padding: 15px;
+}
+
+.digitalCard {
+  margin-top: 30px;
+  height: 100px;
+  width: 250px;
+  border: white 2px solid;
+}
+
+.transaction-container {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  height: 35em;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgb(218, 218, 218);
+  border-radius: 20px;
+  box-shadow: 2px 2px 10px black;
+}
+
+.recent-payment-header {
+  margin-top: 30px;
+  font-size: 20px;
+  color: white;
+}
+
+.footer {
+  bottom: 0;
+  max-width: 80%;
+  border-top: solid grey 0.1em;
+}
+
+.page-title {
+  color: white;
+  margin-top: 0.8em;
+  font-size: 1.5em;
+  padding-bottom: 0.8em;
+  border-bottom: 0.1em solid rgb(59, 59, 59);
+}
+
+.current-balance-amount {
+  font-size: 1.5em;
+  color: white;
+}
+
+.current-balance-title {
+  font-size: 0.8em;
+  color: white;
+}
