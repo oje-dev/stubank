@@ -19,6 +19,7 @@ const {
   requirePassword,
   requirePasswordConfirmation,
 } = require("../../middleware/validators/registration");
+const { genDetails } = require("../cardDetails");
 
 // Import DB
 const User = require("../../models/User");
@@ -110,6 +111,24 @@ router.post(
 
       // Saves to db
       await user.save();
+
+      const newAccount = {};
+      newAccount.userID = user.id;
+      newAccount.cardNumber = encryptionTool.encryptMessage(
+        "keys/publickey.pem",
+        genDetails(16)
+      );
+      newAccount.accountNumber = encryptionTool.encryptMessage(
+        "keys/publickey.pem",
+        genDetails(8)
+      );
+
+      account = new Account(newAccount);
+
+      await account.save();
+
+      // Change to how front end wants it
+      console.log(account);
 
       // Return jsonwebtoken
       const payload = {
