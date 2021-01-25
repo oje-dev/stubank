@@ -7,6 +7,12 @@ const app = express();
 connectDB();
 
 // Init Middleware
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Headers", "x-auth-token, content-type");
+  next();
+});
+
 app.use(express.json({ extended: false }));
 
 app.get("/", (req, res) => res.send("API Running"));
