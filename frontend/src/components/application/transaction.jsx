@@ -6,13 +6,20 @@ class Transaction extends Component {
       <div className="transaction container">
         <div className="row">
           <div className="col-5 col-md-4">
-            {this.props.transaction_info.dateAndTime}
+            {this.props.transaction_info.date &&
+              this.props.transaction_info.date
+                .split("T")[0]
+                .concat(" ")
+                .concat(
+                  this.props.transaction_info.date.split("T")[1].substring(0, 5)
+                )}
           </div>
           <div className="col-4 col-md-4 text-center">
             {this.props.transaction_info.merchant_name}
           </div>
           <div className="col-3 col-md-4 text-right">
-            {"£".concat(this.props.transaction_info.amount)}
+            {this.props.transaction_info.amount &&
+              this.props.currencyFormatter(this.props.transaction_info.amount)}
           </div>
         </div>
       </div>

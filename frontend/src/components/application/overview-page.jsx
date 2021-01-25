@@ -3,13 +3,13 @@ import TransactionList from "./transaction-list.jsx";
 import TransfersList from "./transfers-list.jsx";
 
 class OverviewPage extends Component {
-  formatCurrency(balance) {
+  formatCurrency(amount) {
     const currencyFormatter = new Intl.NumberFormat("en-GB", {
       style: "currency",
       currency: "GBP",
     });
 
-    return currencyFormatter.format(balance);
+    return currencyFormatter.format(amount);
   }
 
   render() {
@@ -39,7 +39,10 @@ class OverviewPage extends Component {
         <div className="row">
           <div className="col-md-6">
             <p className="recent-payment-header">Recent Transactions</p>
-            <TransactionList transactions={this.props.transactionInfo} />
+            <TransactionList
+              getTransactions={this.props.getTransactions}
+              currencyFormatter={this.formatCurrency}
+            />
           </div>
           <div className="col-md-6">
             <p className="recent-payment-header">Recent Transfers</p>
