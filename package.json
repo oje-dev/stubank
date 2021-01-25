@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "node server",
     "server": "nodemon server",
-    "client": "npm start --prefix client",
+    "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Sam Oldham",
@@ -15,6 +15,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "config": "^3.3.3",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-validator": "^6.9.2",
     "jsonwebtoken": "^8.5.1",

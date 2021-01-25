@@ -110,6 +110,7 @@ class CreateAccountForm extends Component {
           return callback(response.data.errors, undefined);
         }
         callback(undefined, response.data.token);
+        localStorage.setItem('x-auth-token', response.data.token);
       })
       .catch((error) => {
         callback(error, undefined);

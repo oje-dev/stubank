@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import AppNavbar from "./app-navbar.jsx";
 import OverviewPage from "./overview-page.jsx";
 import SpendingPage from "./spendingpage.jsx";
@@ -20,7 +21,8 @@ class ApplicationPage extends Component {
 
     this.state = {
       current_page: (
-        <OverviewPage
+        <OverviewPage 
+          userInfo={this.getUserInfo()}
           accountInfo={this.getAccountInfo()}
           transactionInfo={this.getTransactions()}
         />
@@ -46,143 +48,25 @@ class ApplicationPage extends Component {
 
   getAccountInfo() {
     return { current_balance: "1232.23" };
+      //axios.post('/api/accounts')
   }
 
   getTransactions() {
-    return [
-      {
-        merchant_id: "100",
-        merchant_name: "Barclays",
-        amount: "23.75",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "200",
-        merchant_name: "Tesco",
-        amount: "50.21",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "400",
-        merchant_name: "Gregg's",
-        amount: "100.21",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-      {
-        merchant_id: "238",
-        merchant_name: "Sainsbury's",
-        amount: "232.12",
-        dateAndTime: "10/1/21 16:34",
-      },
-    ];
+    const data = axios.get('/api/transactions', {
+        headers: {
+          'content-type': 'application/json',
+          'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZmZjA4MTJlYzFlMTk1OWU4ZjZlMDY1In0sImlhdCI6MTYxMTU4MTc2OSwiZXhwIjoxNjExOTQxNzY5fQ.jVHMvJWtJg0fEmqO90pY7ikvZj9wSfuqlcuSkxFUlfU',
+      }
+      })
+      //console.log(data.data);
+      return data.data;
+      // {
+      //   merchant_id: "100",
+      //   merchant_name: "Barclays",
+      //   amount: "23.75",
+      //   dateAndTime: "10/1/21 16:34",
+      // }
+
   }
 
   onOverview() {
@@ -190,6 +74,7 @@ class ApplicationPage extends Component {
       return {
         current_page: (
           <OverviewPage
+            userInfo={this.getUserInfo()}
             accountInfo={this.getAccountInfo()}
             transactionInfo={this.getTransactions()}
           />

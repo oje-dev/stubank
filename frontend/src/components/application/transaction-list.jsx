@@ -3,6 +3,7 @@ import Transaction from "./transaction.jsx";
 
 class TransactionList extends React.Component {
   render() {
+    console.log(this.props.transactions);
     return (
       <div className="transaction-container">
         {this.props.transactions.map((transaction, index) => (
