@@ -3,6 +3,7 @@ const express = require("express");
 const auth = require("../../middleware/auth");
 const Account = require("../../models/Account");
 const { genDetails } = require("../cardDetails");
+const encryptionTool = require("../../utils/encryptiontool");
 
 const router = express.Router();
 
@@ -18,8 +19,14 @@ router.post("/", auth, async (req, res) => {
   accountFields.userId = req.user.id;
   if (currentBalance) accountFields.currentBalance = currentBalance;
   if (savingsAccount) accountFields.savingsAccount = savingsAccount;
-  accountFields.cardNumber = genDetails(16);
-  accountFields.accountNumber = genDetails(8);
+  accountFields.cardNumber = encryptionTool.encryptMessage(
+    "keys/publickey.pem",
+    genDetails(16)
+  );
+  accountFields.accountNumber = encryptionTool.encryptMessage(
+    "keys/publickey.pem",
+    genDetails(8)
+  );
 
   try {
     account = new Account(accountFields);
@@ -40,6 +47,17 @@ router.get("/", auth, async (req, res) => {
   try {
     const accounts = await Account.find({
       userId: req.user.id,
+    });
+
+    accounts.forEach((element) => {
+      element.cardNumber = encryptionTool.decryptMessage(
+        "keys/publickey.pem",
+        element.cardNumber
+      );
+      element.accountNumber = encryptionTool.decryptMessage(
+        "keys/publickey.pem",
+        element.accountNumber
+      );
     });
 
     res.json(accounts);
