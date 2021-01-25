@@ -22,6 +22,7 @@ class ApplicationPage extends Component {
       current_page: (
         <OverviewPage
           accountInfo={this.getAccountInfo()}
+          userInfo={this.getUserInfo()}
           transactionInfo={this.getTransactions()}
         />
       ),
@@ -192,6 +193,7 @@ class ApplicationPage extends Component {
           <OverviewPage
             accountInfo={this.getAccountInfo()}
             transactionInfo={this.getTransactions()}
+            userInfo={this.getUserInfo()}
           />
         ),
       };
@@ -224,7 +226,9 @@ class ApplicationPage extends Component {
 
   onAccount() {
     this.setState(() => {
-      return { current_page: <AccountPage /> };
+      return {
+        current_page: <AccountPage userInfo={this.getUserInfo()} />,
+      };
     });
   }
 

@@ -18,7 +18,7 @@ class OverviewPage extends Component {
         <div className="row justify-content-center">
           <div className="col">
             <div className="page-title">
-              Welcome back, {this.props.accountInfo.firstname}
+              Welcome back, {this.props.userInfo.firstname}
             </div>
           </div>
         </div>
