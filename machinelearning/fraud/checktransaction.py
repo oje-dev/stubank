@@ -5,9 +5,7 @@ import datetime, pandas as pd, sys, json, numpy as np
 def fraudcheck(amounts, tocheck):
 
     #groups data by recipient
-
     anomaly = False
-
     # get the amounts from the transactions and reshape the array
     amounts = amounts["amount"].values
     array = np.array(amounts)
@@ -28,9 +26,13 @@ def start(d):
     #create a data frame from data and get the transaction to check
     df = pd.DataFrame(d)
     del df['_id']
-    tocheck = df.tail(1)#["amount"].values
-    df=df.drop(df.tail(1).index)
-    #pass to check transaction
-    result = fraudcheck(df, tocheck)
-    #output to Node
-    return(str(result))
+    #If first transaction to a certain recipient, return anomaly=True
+    if len(df)==1:
+        return "True"
+    else:
+        tocheck = df.tail(1)
+        df=df.drop(df.tail(1).index)
+        #pass to check transaction
+        result = fraudcheck(df, tocheck)
+        #output to Node
+        return(str(result))
