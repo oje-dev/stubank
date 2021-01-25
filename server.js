@@ -1,4 +1,3 @@
-const cookieParser = require("cookie-parser");
 const express = require("express");
 const config = require("config");
 
@@ -17,8 +16,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json({ extended: false }));
-
-app.use(cookieParser());
 
 app.get("/", (req, res) => res.send("API Running"));
 

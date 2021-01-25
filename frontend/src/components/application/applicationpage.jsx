@@ -21,10 +21,10 @@ class ApplicationPage extends Component {
 
     this.state = {
       current_page: (
-        <OverviewPage 
+        <OverviewPage
           userInfo={this.getUserInfo()}
           accountInfo={this.getAccountInfo()}
-          transactionInfo={this.getTransactions()}
+          getTransactions={this.getTransactions}
         />
       ),
     };
@@ -48,25 +48,24 @@ class ApplicationPage extends Component {
 
   getAccountInfo() {
     return { current_balance: "1232.23" };
-      //axios.post('/api/accounts')
+    //axios.post('/api/accounts')
   }
 
-  getTransactions() {
-    const data = axios.get('/api/transactions', {
+  getTransactions(callback) {
+    const data = axios
+      .get("/api/transactions", {
         headers: {
-          'content-type': 'application/json',
-          'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZmZjA4MTJlYzFlMTk1OWU4ZjZlMDY1In0sImlhdCI6MTYxMTU4MTc2OSwiZXhwIjoxNjExOTQxNzY5fQ.jVHMvJWtJg0fEmqO90pY7ikvZj9wSfuqlcuSkxFUlfU',
-      }
+          "content-type": "application/json",
+          "x-auth-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZmZjA4MTJlYzFlMTk1OWU4ZjZlMDY1In0sImlhdCI6MTYxMTU4MTc2OSwiZXhwIjoxNjExOTQxNzY5fQ.jVHMvJWtJg0fEmqO90pY7ikvZj9wSfuqlcuSkxFUlfU",
+        },
       })
-      //console.log(data.data);
-      return data.data;
-      // {
-      //   merchant_id: "100",
-      //   merchant_name: "Barclays",
-      //   amount: "23.75",
-      //   dateAndTime: "10/1/21 16:34",
-      // }
-
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
   }
 
   onOverview() {
@@ -76,7 +75,7 @@ class ApplicationPage extends Component {
           <OverviewPage
             userInfo={this.getUserInfo()}
             accountInfo={this.getAccountInfo()}
-            transactionInfo={this.getTransactions()}
+            getTransactions={this.getTransactions}
           />
         ),
       };
