@@ -4,8 +4,11 @@ const auth = require("../../middleware/auth");
 const client = require("../../machinelearning/client");
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
-
+const otp = require("../../utils/totp");
 const router = express.Router();
+const encryptionTool = require("../../utils/encryptiontool");
+const User = require("../../models/User");
+const config = require("config");
 
 // @route   POST api/transactions
 // @desc    Do a transaction
@@ -66,7 +69,6 @@ router.post("/", auth, async (req, res) => {
       userId: req.user.id,
       sentTo,
     }).select("amount");
-
     transactions.push({ _id: 0, amount: amount });
     const stringifiedTransactions = JSON.stringify(transactions);
     // returns isAnomalous, true is an anomaly, false is a 'real' transaction
@@ -76,7 +78,13 @@ router.post("/", auth, async (req, res) => {
       async (isAnomalous) => {
         if (isAnomalous === "True") {
           //send a 2FA request
-          res.send("Please complete 2FA");
+          const email = await User.findById(req.user.id).select("email");
+          const emailDecrypted = encryptionTool.decryptMessage(
+            "/keys/privatekey.pem",
+            config.get("passphrase"),
+            email.email
+          )
+          otp.gentoken(req.user.id,emailDecrypted)
         } else {
           // a 2FA check would go here and else would be removed and if it was completed: this code would run:
           transaction = new Transaction(transactionFields);
