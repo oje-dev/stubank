@@ -127,6 +127,7 @@ router.get("/", auth, async (req, res) => {
 // @access Private
 router.get("/predict", auth, async (req, res) => {
   const transactions = await Transaction.find({ userId: req.user.id });
+  if transactions.
   const stringifiedTransaction = JSON.stringify(transactions);
   client.req(
     stringifiedTransaction,
