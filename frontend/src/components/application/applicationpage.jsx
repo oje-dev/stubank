@@ -18,12 +18,178 @@ class ApplicationPage extends Component {
     this.onAccount = this.onAccount.bind(this);
     this.onHelp = this.onHelp.bind(this);
 
-    this.state = { current_page: <OverviewPage /> };
+    this.state = {
+      current_page: (
+        <OverviewPage
+          accountInfo={this.getAccountInfo}
+          transactionInfo={this.getTransactions}
+        />
+      ),
+    };
+  }
+
+  getUserInfo() {
+    return {
+      title: "Mr.",
+      firstname: "Oliver",
+      lastname: "El-kheir",
+      phoneno: "+447447800084",
+      dob: "01/10/1997",
+      uni: "Newcastle University",
+      course: "G600",
+      address: "19 Cavendish Place, Jesmond",
+      city: "Newcastle-upon-Tyne",
+      postcode: "NE2 2NE",
+      email: "o.elkheir1@newcastle.ac.uk",
+    };
+  }
+
+  getAccountInfo() {
+    return { current_balance: "1232.23" };
+  }
+
+  getTransactions() {
+    return [
+      {
+        merchant_id: "100",
+        merchant_name: "Barclays",
+        amount: "23.75",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "200",
+        merchant_name: "Tesco",
+        amount: "50.21",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "400",
+        merchant_name: "Gregg's",
+        amount: "100.21",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+      {
+        merchant_id: "238",
+        merchant_name: "Sainsbury's",
+        amount: "232.12",
+        dateAndTime: "10/1/21 16:34",
+      },
+    ];
   }
 
   onOverview() {
     this.setState(() => {
-      return { current_page: <OverviewPage /> };
+      return {
+        current_page: <OverviewPage userInfo={this.getUserInfo} />,
+      };
     });
   }
 
@@ -58,6 +224,7 @@ class ApplicationPage extends Component {
   }
 
   render() {
+    console.log(this.state.user_info);
     return (
       <div>
         <div className="fade-in container-fluid my-container vh-100">
