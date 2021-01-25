@@ -3,19 +3,6 @@ import TransactionList from "./transaction-list.jsx";
 import TransfersList from "./transfers-list.jsx";
 
 class OverviewPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.userInfo = this.getUserInfo();
-  }
-
-  getUserInfo() {
-    return {
-      first_name: "Oliver",
-      current_balance: "549234393.32",
-    };
-  }
-
   formatCurrency(balance) {
     const currencyFormatter = new Intl.NumberFormat("en-GB", {
       style: "currency",
@@ -31,7 +18,7 @@ class OverviewPage extends Component {
         <div className="row justify-content-center">
           <div className="col">
             <div className="page-title">
-              Welcome back, {this.userInfo.first_name}
+              Welcome back, {this.props.accountInfo.firstname}
             </div>
           </div>
         </div>
@@ -41,7 +28,7 @@ class OverviewPage extends Component {
               <span className="current-balance-title">Current Balance</span>
               <br />
               <span className="current-balance-amount">
-                {this.formatCurrency(this.userInfo.current_balance)}
+                {this.formatCurrency(this.props.accountInfo.current_balance)}
               </span>
               <br />
               <span className="current-balance-title">Savings Pots</span>
@@ -52,7 +39,7 @@ class OverviewPage extends Component {
         <div className="row">
           <div className="col-md-6">
             <p className="recent-payment-header">Recent Transactions</p>
-            <TransactionList />
+            <TransactionList transactions={this.props.transactionInfo} />
           </div>
           <div className="col-md-6">
             <p className="recent-payment-header">Recent Transfers</p>
