@@ -24,12 +24,7 @@ class ApplicationPage extends Component {
         <OverviewPage
           userInfo={this.getUserInfo()}
           accountInfo={this.getAccountInfo()}
-<<<<<<< HEAD
-          userInfo={this.getUserInfo()}
-          transactionInfo={this.getTransactions()}
-=======
           getTransactions={this.getTransactions}
->>>>>>> fd91ff7828f6ae938f523d5b8df583cf4296509d
         />
       ),
     };
