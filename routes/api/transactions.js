@@ -1,10 +1,18 @@
 const express = require("express");
+const config = require("config");
 
 const auth = require("../../middleware/auth");
 const client = require("../../machinelearning/client");
+const encryptionTool = require("../../utils/encryptiontool");
+
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
+<<<<<<< routes/api/transactions.js
 const otp = require("../../utils/totp");
+=======
+const User = require("../../models/User");
+
+>>>>>>> routes/api/transactions.js
 const router = express.Router();
 const encryptionTool = require("../../utils/encryptiontool");
 const User = require("../../models/User");
@@ -15,7 +23,7 @@ const config = require("config");
 // @access  Private
 router.post("/", auth, async (req, res) => {
   // Destructure request
-  const { sentFrom, sentTo, amount } = req.body;
+  const { sentFrom, sentTo, amount, recipientName } = req.body;
 
   // Build transaction object
   const transactionFields = {};
@@ -23,6 +31,26 @@ router.post("/", auth, async (req, res) => {
   if (sentFrom) transactionFields.sentFrom = sentFrom;
   if (sentTo) transactionFields.sentTo = sentTo;
   if (amount) transactionFields.amount = amount;
+  if (recipientName) {
+    transactionFields.recipientName = recipientName;
+  } else {
+    const recipientUser = await Account.findById(sentTo).select("userId");
+    let firstname = await User.findById(recipientUser.userId).select(
+      "firstname"
+    );
+    let lastname = await User.findById(recipientUser.userId).select("lastname");
+    firstname = encryptionTool.decryptMessage(
+      "/keys/privatekey.pem",
+      config.get("passphrase"),
+      firstname.firstname
+    );
+    lastname = encryptionTool.decryptMessage(
+      "/keys/privatekey.pem",
+      config.get("passphrase"),
+      lastname.lastname
+    );
+    transactionFields.recipientName = firstname.concat(" ").concat(lastname);
+  }
 
   try {
     // Find accounts

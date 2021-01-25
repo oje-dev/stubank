@@ -1,10 +1,64 @@
 import React from "react";
+import axios from "axios";
 
 export default class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
+
+    this.onSubmit = this.onSubmit.bind(this);
+    this.sendRequest = this.sendRequest.bind(this);
+
+    this.state = {
+      email: "",
+      password: "",
+    };
+  }
+
+  handleChangeEmail(event) {
+    this.setState({ email: event.target.value });
+  }
+
+  handleChangePassword(event) {
+    this.setState({
+      password: event.target.value,
+    });
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    this.sendRequest((error, data) => {
+      if (error) {
+        return alert(error);
+      }
+      console.log(error);
+      console.log(data);
+    });
+  }
+
+  sendRequest(callback) {
+    axios
+      .post("/api/auth", this.state, {
+        headers: { "content-type": "application/json" },
+      })
+      .then((response) => {
+        if (response.data.errors) {
+          return callback(response.data.errors, undefined);
+        }
+        callback(undefined, response.data.token);
+        localStorage.setItem('x-auth-token', response.data.token);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+  
   render() {
     return (
       <div className="loginForm fade-in">
-        <form>
+        <form onSubmit={this.onSubmit}>
           <div className="form-group">
             <div className="form-row">
               <div className="col">
@@ -13,8 +67,9 @@ export default class LoginForm extends React.Component {
                   id="loginEmail"
                   type="email"
                   className="form-control form-control-lrg"
-                  required="true"
+                  required={true}
                   placeholder="someone@example.com"
+                  onChange={this.handleChangeEmail}
                 ></input>
               </div>
             </div>
@@ -25,8 +80,9 @@ export default class LoginForm extends React.Component {
                   id="loginPassword"
                   type="password"
                   className="form-control form-control-lrg"
-                  required="true"
+                  required={true}
                   placeholder="•••••••••••"
+                  onChange={this.handleChangePassword}
                 ></input>
               </div>
             </div>

@@ -1,17 +1,137 @@
-import React from "react";
+import axios from "axios";
+import React, { Component } from "react";
 
-export default class CreateAccountForm extends React.Component {
+class CreateAccountForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChangeTitle = this.handleChangeTitle.bind(this);
+    this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
+    this.handleChangeLastName = this.handleChangeLastName.bind(this);
+    this.handleChangePhoneNumber = this.handleChangePhoneNumber.bind(this);
+    this.handleChangeDoB = this.handleChangeDoB.bind(this);
+    this.handleChangeUniversity = this.handleChangeUniversity.bind(this);
+    this.handleChangeCourse = this.handleChangeCourse.bind(this);
+    this.handleChangeAddress = this.handleChangeAddress.bind(this);
+    this.handleChangeCity = this.handleChangeCity.bind(this);
+    this.handleChangePostCode = this.handleChangePostCode.bind(this);
+    this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
+
+    this.onSubmit = this.onSubmit.bind(this);
+    this.sendRequest = this.sendRequest.bind(this);
+
+    this.state = {
+      title: "Mr.",
+      firstname: "",
+      lastname: "",
+      phoneno: "",
+      dob: "",
+      uni: "",
+      course: "",
+      address: "",
+      city: "",
+      postcode: "",
+      email: "",
+      password: "",
+      password2: "",
+    };
+  }
+
+  handleChangeTitle(event) {
+    this.setState({ title: event.target.value });
+  }
+
+  handleChangeFirstName(event) {
+    this.setState({ firstname: event.target.value });
+  }
+
+  handleChangeLastName(event) {
+    this.setState({ lastname: event.target.value });
+  }
+
+  handleChangePhoneNumber(event) {
+    this.setState({ phoneno: event.target.value });
+  }
+
+  handleChangeDoB(event) {
+    this.setState({ dob: event.target.value });
+  }
+
+  handleChangeUniversity(event) {
+    this.setState({ uni: event.target.value });
+  }
+
+  handleChangeCourse(event) {
+    this.setState({ course: event.target.value });
+  }
+
+  handleChangeAddress(event) {
+    this.setState({ address: event.target.value });
+  }
+
+  handleChangeCity(event) {
+    this.setState({ city: event.target.value });
+  }
+
+  handleChangePostCode(event) {
+    this.setState({ postcode: event.target.value });
+  }
+
+  handleChangeEmail(event) {
+    this.setState({ email: event.target.value });
+  }
+
+  handleChangePassword(event) {
+    this.setState({
+      password: event.target.value,
+      password2: event.target.value,
+    });
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    this.sendRequest((error, data) => {
+      if (error) {
+        return alert(error);
+      }
+      console.log(error);
+      console.log(data);
+    });
+  }
+
+  sendRequest(callback) {
+    axios
+      .post("/api/users", this.state, {
+        headers: { "content-type": "application/json" },
+      })
+      .then((response) => {
+        if (response.data.errors) {
+          return callback(response.data.errors, undefined);
+        }
+        callback(undefined, response.data.token);
+        localStorage.setItem('x-auth-token', response.data.token);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+
   render() {
     return (
-      <div class="createAccountForm fade-in">
-        <form>
+      <div className="createAccountForm fade-in">
+        <form onSubmit={this.onSubmit}>
           {/* Title */}
 
           <div className="form-group">
             <div className="form-row">
               <div className="col">
                 <label htmlFor="title">Title*</label>
-                <select id="title" className="form-control form-control-sm">
+                <select
+                  id="title"
+                  className="form-control form-control-sm"
+                  onChange={this.handleChangeTitle}
+                >
                   <option value="Mr.">Mr.</option>
                   <option value="Mrs.">Mrs.</option>
                   <option value="Ms.">Ms.</option>
@@ -31,7 +151,8 @@ export default class CreateAccountForm extends React.Component {
                   type="text"
                   className="form-control form-control-sm"
                   placeholder="John"
-                  required="true"
+                  required={true}
+                  onChange={this.handleChangeFirstName}
                 ></input>
               </div>
               <div className="col">
@@ -39,9 +160,10 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   id="last_name"
                   type="text"
-                  class="form-control form-control-sm"
+                  className="form-control form-control-sm"
                   placeholder="Smith"
-                  required="true"
+                  required={true}
+                  onChange={this.handleChangeLastName}
                 ></input>
               </div>
             </div>
@@ -55,9 +177,10 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   id="phone_number"
                   type="text"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="+44-7447-777777"
+                  onChange={this.handleChangePhoneNumber}
                 ></input>
               </div>
               <div className="col">
@@ -65,8 +188,9 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   id="date_of_birth"
                   type="date"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
+                  onChange={this.handleChangeDoB}
                 ></input>
               </div>
             </div>
@@ -78,9 +202,10 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   id="curr_university"
                   type="text"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="Newcastle University"
+                  onChange={this.handleChangeUniversity}
                 ></input>
               </div>
               <div className="col">
@@ -88,71 +213,11 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   id="course_code"
                   type="text"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="G600"
+                  onChange={this.handleChangeCourse}
                 ></input>
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <div className="form-row">
-              <div className="col">
-                <label htmlFor="curr_year">Current Year*</label>
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="col">
-                {" "}
-                <div className="form-check form-check-inline">
-                  <input
-                    id="year_1"
-                    type="radio"
-                    name="curr_year"
-                    required="true"
-                    className="form-check-input"
-                  ></input>
-                  <label htmlFor="year_1" className="form-check-label">
-                    1st
-                  </label>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    id="year_2"
-                    type="radio"
-                    name="curr_year"
-                    required="true"
-                    className="form-check-input"
-                  ></input>
-                  <label htmlFor="year_2" className="form-check-label">
-                    2nd
-                  </label>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    id="year_3"
-                    type="radio"
-                    name="curr_year"
-                    required="true"
-                    className="form-check-input"
-                  ></input>
-                  <label htmlFor="year_3" className="form-check-label">
-                    3rd
-                  </label>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    id="year_4"
-                    type="radio"
-                    name="curr_year"
-                    required="true"
-                    className="form-check-input"
-                  ></input>
-                  <label htmlFor="year_4" className="form-check-label">
-                    4th+
-                  </label>
-                </div>
               </div>
             </div>
           </div>
@@ -163,21 +228,12 @@ export default class CreateAccountForm extends React.Component {
               <div className="col">
                 <label htmlFor="address_1">Address 1*</label>
                 <input
+                  id="address_1"
                   type="text"
-                  name="address_1"
-                  required="true"
-                  placeholder="House Name/No"
+                  required={true}
+                  placeholder="Line 1"
                   className="form-control form-control-sm"
-                ></input>
-              </div>
-              <div className="col">
-                <label htmlFor="address_2">Address 2*</label>
-                <input
-                  type="text"
-                  name="address_2"
-                  required="true"
-                  className="form-control form-control-sm"
-                  placeholder="Street Name"
+                  onChange={this.handleChangeAddress}
                 ></input>
               </div>
             </div>
@@ -185,12 +241,13 @@ export default class CreateAccountForm extends React.Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col">
-                <label htmlFor="address_3">Address 3</label>
+                <label htmlFor="address_2">Address 2</label>
                 <input
+                  id="address_2"
                   type="text"
-                  name="address_3"
                   className="form-control form-control-sm"
-                  placeholder="Other"
+                  placeholder="Line 2"
+                  onChange={this.handleChangeAddress}
                 ></input>
               </div>
             </div>
@@ -198,13 +255,14 @@ export default class CreateAccountForm extends React.Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col">
-                <label htmlFor="address_county">County*</label>
+                <label htmlFor="address_city">City*</label>
                 <input
                   type="text"
-                  name="address_county"
-                  required="true"
+                  id="address_city"
+                  required={true}
                   className="form-control form-control-sm"
-                  placeholder="Tyne and Wear"
+                  placeholder="Newcastle-upon-Tyne"
+                  onChange={this.handleChangeCity}
                 ></input>
               </div>
               <div className="col">
@@ -212,9 +270,10 @@ export default class CreateAccountForm extends React.Component {
                 <input
                   type="text"
                   name="address_postcode"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="NE1 1NE"
+                  onChange={this.handleChangePostCode}
                 ></input>
               </div>
             </div>
@@ -224,13 +283,14 @@ export default class CreateAccountForm extends React.Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col">
-                <label htmlFor="email_address">Email Address: </label>
+                <label htmlFor="email_address">Email Address</label>
                 <input
                   type="email"
                   name="email_address"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="someone@example.com"
+                  onChange={this.handleChangeEmail}
                 ></input>
               </div>
             </div>
@@ -238,23 +298,25 @@ export default class CreateAccountForm extends React.Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col">
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   name="password"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="•••••••••••"
+                  onChange={this.handleChangePassword}
                 ></input>
               </div>
               <div className="col">
-                <label htmlFor="confirm_password">Confirm Password: </label>
+                <label htmlFor="confirm_password">Confirm Password</label>
                 <input
                   type="password"
                   name="confirm_password"
-                  required="true"
+                  required={true}
                   className="form-control form-control-sm"
                   placeholder="•••••••••••"
+                  onChange={this.handleChangePassword}
                 ></input>
               </div>
             </div>
@@ -283,3 +345,5 @@ export default class CreateAccountForm extends React.Component {
     );
   }
 }
+
+export default CreateAccountForm;
