@@ -21,8 +21,8 @@ class ApplicationPage extends Component {
     this.state = {
       current_page: (
         <OverviewPage
-          accountInfo={this.getAccountInfo}
-          transactionInfo={this.getTransactions}
+          accountInfo={this.getAccountInfo()}
+          transactionInfo={this.getTransactions()}
         />
       ),
     };
@@ -188,7 +188,12 @@ class ApplicationPage extends Component {
   onOverview() {
     this.setState(() => {
       return {
-        current_page: <OverviewPage userInfo={this.getUserInfo} />,
+        current_page: (
+          <OverviewPage
+            accountInfo={this.getAccountInfo()}
+            transactionInfo={this.getTransactions()}
+          />
+        ),
       };
     });
   }
@@ -224,7 +229,6 @@ class ApplicationPage extends Component {
   }
 
   render() {
-    console.log(this.state.user_info);
     return (
       <div>
         <div className="fade-in container-fluid my-container vh-100">

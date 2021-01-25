@@ -3,10 +3,6 @@ import TransactionList from "./transaction-list.jsx";
 import TransfersList from "./transfers-list.jsx";
 
 class OverviewPage extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   formatCurrency(balance) {
     const currencyFormatter = new Intl.NumberFormat("en-GB", {
       style: "currency",
@@ -32,7 +28,7 @@ class OverviewPage extends Component {
               <span className="current-balance-title">Current Balance</span>
               <br />
               <span className="current-balance-amount">
-                {this.formatCurrency(this.props.accountInfo.balance)}
+                {this.formatCurrency(this.props.accountInfo.current_balance)}
               </span>
               <br />
               <span className="current-balance-title">Savings Pots</span>
