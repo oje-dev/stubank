@@ -17,7 +17,6 @@ class TwoFAForm extends Component {
   onSubmit(e) {
     e.preventDefault();
     this.sendRequest((error, data) => {
-      console.log(error, data);
       if (error) {
         return alert("Incorrect Code");
       }

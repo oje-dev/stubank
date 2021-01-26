@@ -115,7 +115,7 @@ router.post(
       await user.save();
 
       const newAccount = {};
-      newAccount.userID = user.id;
+      newAccount.userId = user.id;
       newAccount.cardNumber = encryptionTool.encryptMessage(
         "keys/publickey.pem",
         genDetails(16)

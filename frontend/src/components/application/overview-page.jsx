@@ -26,7 +26,9 @@ class OverviewPage extends Component {
       if (error) {
         return this.setState({ current_balance: this.formatCurrency(0) });
       }
-      console.log(data);
+      this.setState({
+        current_balance: this.formatCurrency(data.data.balance),
+      });
     });
   }
 

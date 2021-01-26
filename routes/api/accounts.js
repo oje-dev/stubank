@@ -131,12 +131,12 @@ router.post("/freeze/:id", auth, async (req, res) => {
 // @desc    Create an account
 // @access  Private
 router.get("/balance", auth, async (req, res) => {
-  const account = await Account.find({
+  const account = await Account.findOne({
     userId: req.user.id,
+    savingsAccount: false,
   });
 
-  console.log(account);
-  res.send(account.currentBalance);
+  res.status(200).send({ balance: account.currentBalance });
 });
 
 module.exports = router;

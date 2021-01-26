@@ -48,11 +48,9 @@ class ApplicationPage extends Component {
       })
       .then((data) => {
         callback(undefined, data);
-        console.log(data);
       })
       .catch((error) => {
         callback(error, undefined);
-        console.log(error);
       });
   }
 
@@ -98,11 +96,9 @@ class ApplicationPage extends Component {
       })
       .then((data) => {
         callback(undefined, data);
-        console.log(data);
       })
       .catch((error) => {
         callback(error, undefined);
-        console.log(error);
       });
   }
 
