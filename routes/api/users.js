@@ -209,4 +209,49 @@ router.post("/update", auth, async (req, res) => {
   }
 });
 
+// @route   POST api/users/password
+// @desc    Update password
+// @access  Private
+router.post(
+  "/password",
+  [auth, [requirePassword, requirePasswordConfirmation]],
+  async (req, res) => {
+    // Checks for errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ errors: errors.array() });
+    }
+
+    let user = await User.findById(req.user.id);
+
+    let password = req.body;
+
+    try {
+      // Creates salt with 10 rounds, more rounds = more secure but slower to execute
+      const salt = await bcrypt.genSalt(10);
+      // Hashes password
+      password = await bcrypt.hash(password, salt);
+
+      let encryptedData = {};
+
+      // Encrypts data
+      encryptedData.password = encryptionTool.encryptMessage(
+        "keys/publickey.pem",
+        password
+      );
+
+      user = await User.findOneAndUpdate(
+        { id: req.user.id },
+        { $set: encryptedData },
+        { new: true }
+      );
+
+      return res.json(user);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
 module.exports = router;

@@ -62,7 +62,7 @@ router.post("/otp", async (req, res) => {
       }
     );
   } else {
-    res.send("Invalid one time passcode.");
+    res.json({ errors: "Invalid one time passcode." });
   }
 });
 
