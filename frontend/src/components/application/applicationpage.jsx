@@ -14,7 +14,6 @@ class ApplicationPage extends Component {
     super(props);
 
     this.JWTToken = localStorage.getItem("x-auth-token");
-    console.log(localStorage.getItem("x-auth-token"));
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);
