@@ -8,15 +8,9 @@ const encryptionTool = require("../../utils/encryptiontool");
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
 const otp = require("../../utils/totp");
-<<<<<<< HEAD
 const User = require("../../models/User");
 
 const router = express.Router();
-=======
-
-const router = express.Router();
-const User = require("../../models/User");
->>>>>>> olly
 
 // @route   POST api/transactions
 // @desc    Do a transaction
