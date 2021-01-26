@@ -11,6 +11,8 @@ const gentoken = (user, address) => {
   const token = speakeasy.totp({
     secret: user + secret.base32,
     encoding: "base32",
+    window: 0,
+    step: 300,
   });
   const text = "Your Two-Factor Authentication code is: " + token;
   const html = "<h3>Your One-Time Password is: " + token + "</h3>";
@@ -35,7 +37,8 @@ const checktoken = (token, user) => {
     secret: user + secret.base32,
     encoding: "base32",
     token: token,
-    window: 6,
+    window: 0,
+    step: 300,
   });
   return tokenValidates;
 };
