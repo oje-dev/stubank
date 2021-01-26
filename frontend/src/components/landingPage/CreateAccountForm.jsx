@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
+import TwoFAForm from "./2FAForm.jsx";
 
 class CreateAccountForm extends Component {
   constructor(props) {
@@ -21,103 +22,7 @@ class CreateAccountForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
 
-    this.state = {
-      title: "Mr.",
-      firstname: "",
-      lastname: "",
-      phoneno: "",
-      dob: "",
-      uni: "",
-      course: "",
-      address: "",
-      city: "",
-      postcode: "",
-      email: "",
-      password: "",
-      password2: "",
-    };
-  }
-
-  handleChangeTitle(event) {
-    this.setState({ title: event.target.value });
-  }
-
-  handleChangeFirstName(event) {
-    this.setState({ firstname: event.target.value });
-  }
-
-  handleChangeLastName(event) {
-    this.setState({ lastname: event.target.value });
-  }
-
-  handleChangePhoneNumber(event) {
-    this.setState({ phoneno: event.target.value });
-  }
-
-  handleChangeDoB(event) {
-    this.setState({ dob: event.target.value });
-  }
-
-  handleChangeUniversity(event) {
-    this.setState({ uni: event.target.value });
-  }
-
-  handleChangeCourse(event) {
-    this.setState({ course: event.target.value });
-  }
-
-  handleChangeAddress(event) {
-    this.setState({ address: event.target.value });
-  }
-
-  handleChangeCity(event) {
-    this.setState({ city: event.target.value });
-  }
-
-  handleChangePostCode(event) {
-    this.setState({ postcode: event.target.value });
-  }
-
-  handleChangeEmail(event) {
-    this.setState({ email: event.target.value });
-  }
-
-  handleChangePassword(event) {
-    this.setState({
-      password: event.target.value,
-      password2: event.target.value,
-    });
-  }
-
-  onSubmit(event) {
-    event.preventDefault();
-    this.sendRequest((error, data) => {
-      if (error) {
-        console.log(error);
-        return alert(error);
-      }
-      console.log(data);
-    });
-  }
-
-  sendRequest(callback) {
-    axios
-      .post("/api/users", this.state, {
-        headers: { "content-type": "application/json" },
-      })
-      .then((response) => {
-        if (response.data.errors) {
-          throw response.data.errors;
-        }
-        callback(undefined, response.data.token);
-      })
-      .catch((error) => {
-        callback(error, undefined);
-      });
-  }
-
-  render() {
-    return (
+    this.createAccountForm = (
       <div className="createAccountForm fade-in">
         <form onSubmit={this.onSubmit}>
           {/* Title */}
@@ -342,6 +247,108 @@ class CreateAccountForm extends Component {
         </form>
       </div>
     );
+
+    this.state = {
+      title: "Mr.",
+      firstname: "",
+      lastname: "",
+      phoneno: "",
+      dob: "",
+      uni: "",
+      course: "",
+      address: "",
+      city: "",
+      postcode: "",
+      email: "",
+      password: "",
+      password2: "",
+      form: this.createAccountForm,
+    };
+  }
+
+  handleChangeTitle(event) {
+    this.setState({ title: event.target.value });
+  }
+
+  handleChangeFirstName(event) {
+    this.setState({ firstname: event.target.value });
+  }
+
+  handleChangeLastName(event) {
+    this.setState({ lastname: event.target.value });
+  }
+
+  handleChangePhoneNumber(event) {
+    this.setState({ phoneno: event.target.value });
+  }
+
+  handleChangeDoB(event) {
+    this.setState({ dob: event.target.value });
+  }
+
+  handleChangeUniversity(event) {
+    this.setState({ uni: event.target.value });
+  }
+
+  handleChangeCourse(event) {
+    this.setState({ course: event.target.value });
+  }
+
+  handleChangeAddress(event) {
+    this.setState({ address: event.target.value });
+  }
+
+  handleChangeCity(event) {
+    this.setState({ city: event.target.value });
+  }
+
+  handleChangePostCode(event) {
+    this.setState({ postcode: event.target.value });
+  }
+
+  handleChangeEmail(event) {
+    this.setState({ email: event.target.value });
+  }
+
+  handleChangePassword(event) {
+    this.setState({
+      password: event.target.value,
+      password2: event.target.value,
+    });
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    this.sendRequest((error, data) => {
+      if (error) {
+        let errorMessage = "";
+        error.forEach((error) => {
+          errorMessage += error.msg + "\n";
+        });
+        return alert(errorMessage);
+      }
+      this.setState({ form: <TwoFAForm userID={data} /> });
+    });
+  }
+
+  sendRequest(callback) {
+    axios
+      .post("/api/users", this.state, {
+        headers: { "content-type": "application/json" },
+      })
+      .then((response) => {
+        if (response.data.errors) {
+          throw response.data.errors;
+        }
+        callback(undefined, response.data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+
+  render() {
+    return <div>{this.state.form}</div>;
   }
 }
 

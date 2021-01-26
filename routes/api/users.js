@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
+const otp = require("../../utils/totp");
 
 const auth = require("../../middleware/auth");
 const encryptionTool = require("../../utils/encryptiontool");
@@ -129,24 +130,9 @@ router.post(
       await account.save();
 
       // Change to how front end wants it
-      console.log(account);
+      otp.gentoken(user.id, req.body.email);
 
-      // Return jsonwebtoken
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
+      res.send(user.id);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error");
