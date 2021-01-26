@@ -40,6 +40,10 @@ class AppNavbar extends Component {
     this.props.onAccount();
   }
 
+  onLogout() {
+    sessionStorage.removeItem("x-auth-token");
+  }
+
   render() {
     return (
       <Navbar
@@ -49,7 +53,7 @@ class AppNavbar extends Component {
         variant="dark"
         className="shadow-lg rounded"
       >
-        <Navbar.Brand href="/">
+        <Navbar.Brand href="/application">
           <img
             src={Logo}
             alt=""
@@ -95,7 +99,9 @@ class AppNavbar extends Component {
               </NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link href="/">Logout</Nav.Link>
+            <Nav.Link onClick={this.onLogout} href="/">
+              Logout
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

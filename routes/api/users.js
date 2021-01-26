@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
+const otp = require("../../utils/totp");
 
 const auth = require("../../middleware/auth");
 const encryptionTool = require("../../utils/encryptiontool");
@@ -129,10 +130,15 @@ router.post(
       await account.save();
 
       // Change to how front end wants it
+<<<<<<< HEAD
       //console.log(account);
 
       otp.gentoken(user.id, req.body.email);
 
+=======
+      otp.gentoken(user.id, req.body.email);
+
+>>>>>>> olly
       res.send(user.id);
     } catch (err) {
       console.error(err.message);
