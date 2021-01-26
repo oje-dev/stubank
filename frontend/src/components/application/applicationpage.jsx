@@ -13,7 +13,7 @@ class ApplicationPage extends Component {
   constructor(props) {
     super(props);
 
-    this.JWTToken = localStorage.getItem("x-auth-token");
+    this.JWTToken = sessionStorage.getItem("x-auth-token");
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);

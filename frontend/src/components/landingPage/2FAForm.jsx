@@ -21,7 +21,7 @@ class TwoFAForm extends Component {
       if (error) {
         return alert("Incorrect Code");
       }
-      localStorage.setItem("x-auth-token", data.token);
+      sessionStorage.setItem("x-auth-token", data.token);
       window.location.replace("/application");
     });
   }
