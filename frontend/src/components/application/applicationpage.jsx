@@ -1,16 +1,19 @@
 import React, { Component } from "react";
 import axios from "axios";
-import AppNavbar from "./app-navbar.jsx";
 import OverviewPage from "./overview-page.jsx";
 import SpendingPage from "./spendingpage.jsx";
 import SavingsPage from "./savingspage.jsx";
 import PaymentsPage from "./paymentspage.jsx";
 import AccountPage from "./accountpage.jsx";
 import HelpPage from "./helppage.jsx";
+import InvalidAuth from "./invalidauth.jsx";
+import AppNavbar from "./app-navbar.jsx";
 
 class ApplicationPage extends Component {
   constructor(props) {
     super(props);
+
+    this.JWTToken = localStorage.getItem("x-auth-token");
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);
@@ -18,6 +21,7 @@ class ApplicationPage extends Component {
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
     this.onHelp = this.onHelp.bind(this);
+    this.getTransactions = this.getTransactions.bind(this);
 
     this.state = {
       current_page: (
@@ -27,6 +31,7 @@ class ApplicationPage extends Component {
           getTransactions={this.getTransactions}
         />
       ),
+      isValid: true,
     };
   }
 
@@ -56,16 +61,25 @@ class ApplicationPage extends Component {
       .get("/api/transactions", {
         headers: {
           "content-type": "application/json",
-          "x-auth-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZmZjA4MTJlYzFlMTk1OWU4ZjZlMDY1In0sImlhdCI6MTYxMTU4MTc2OSwiZXhwIjoxNjExOTQxNzY5fQ.jVHMvJWtJg0fEmqO90pY7ikvZj9wSfuqlcuSkxFUlfU",
+          "x-auth-token": this.mockJWTToken,
         },
       })
       .then((data) => {
-        callback(undefined, data);
+        callback(undefined, data.data);
       })
       .catch((error) => {
         callback(error, undefined);
+        this.setState({ isValid: false });
       });
+  }
+
+  getPayments(callback) {
+    const data = axios.get("/api/transactions", {
+      headers: {
+        "content-type": "application/json",
+        "x-auth-token": this.mockJWTToken,
+      },
+    });
   }
 
   onOverview() {
@@ -108,7 +122,9 @@ class ApplicationPage extends Component {
 
   onAccount() {
     this.setState(() => {
-      return { current_page: <AccountPage /> };
+      return {
+        current_page: <AccountPage userInfo={this.getUserInfo()} />,
+      };
     });
   }
 
@@ -128,8 +144,8 @@ class ApplicationPage extends Component {
               />
             </div>
           </div>
-
           {this.state.current_page}
+          {!this.state.isValid && <InvalidAuth />}
         </div>
       </div>
     );

@@ -9,13 +9,14 @@ class Transaction extends Component {
             {this.props.transaction_info.date &&
               this.props.transaction_info.date
                 .split("T")[0]
+                .substring(2, 10)
                 .concat(" ")
                 .concat(
                   this.props.transaction_info.date.split("T")[1].substring(0, 5)
                 )}
           </div>
           <div className="col-4 col-md-4 text-center">
-            {this.props.transaction_info.merchant_name}
+            {this.props.transaction_info.recipientName}
           </div>
           <div className="col-3 col-md-4 text-right">
             {this.props.transaction_info.amount &&
