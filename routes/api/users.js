@@ -130,15 +130,10 @@ router.post(
       await account.save();
 
       // Change to how front end wants it
-<<<<<<< HEAD
       //console.log(account);
 
       otp.gentoken(user.id, req.body.email);
 
-=======
-      otp.gentoken(user.id, req.body.email);
-
->>>>>>> olly
       res.send(user.id);
     } catch (err) {
       console.error(err.message);

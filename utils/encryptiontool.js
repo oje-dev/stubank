@@ -111,7 +111,7 @@ const decryptMessage = (privateKeyPath, passphrase, encryptedMessage) => {
   } catch (error) {
     console.log(
       chalk.red.bold.inverse(
-        "\n *** An error occurred and the string could not be encrypted *** \n\n".toUpperCase()
+        "\n *** An error occurred and the string could not be decrypted *** \n\n".toUpperCase()
       ) + chalk.red.bold(error + "\n")
     );
   }

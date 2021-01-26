@@ -16,16 +16,27 @@ router.get("/", auth, async (req, res) => {
       return res.send("User not found");
     }
 
-    console.log(user);
-    let decryptedData = {};
-
-    for (const [key, value] of Object.entries(user)) {
-      decryptedData[key] = encryptionTool.decryptMessage(
-        "keys/publickey.pem",
+    const decryptField = (field) => {
+      return encryptionTool.decryptMessage(
+        "/keys/privatekey.pem",
         config.get("passphrase"),
-        value
+        field
       );
-    }
+    };
+
+    let decryptedData = {
+      title: decryptField(user.title),
+      firstname: decryptField(user.firstname),
+      lastname: decryptField(user.lastname),
+      phoneno: decryptField(user.phoneno),
+      dob: decryptField(user.dob),
+      uni: decryptField(user.uni),
+      course: decryptField(user.course),
+      address: decryptField(user.address),
+      city: decryptField(user.city),
+      postcode: decryptField(user.postcode),
+      email: decryptField(user.email),
+    };
 
     res.send(decryptedData);
   } catch (err) {

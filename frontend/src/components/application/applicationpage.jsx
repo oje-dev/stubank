@@ -22,6 +22,9 @@ class ApplicationPage extends Component {
     this.onAccount = this.onAccount.bind(this);
     this.onHelp = this.onHelp.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
+    this.getAccountInfo = this.getAccountInfo.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
+    this.getPayments = this.getPayments.bind(this);
 
     this.state = {
       current_page: (
@@ -35,33 +38,36 @@ class ApplicationPage extends Component {
     };
   }
 
-  getUserInfo() {
-   const info = axios.get('/api/application', { headers: {
-    "x-auth-token": this.JWTToken
-   }}) 
-
-    // return {
-    //   title: "Mr.",
-    //   firstname: "Oliver",
-    //   lastname: "El-kheir",
-    //   phoneno: "+447447800084",
-    //   dob: "01/10/1997",
-    //   uni: "Newcastle University",
-    //   course: "G600",
-    //   address: "19 Cavendish Place, Jesmond",
-    //   city: "Newcastle-upon-Tyne",
-    //   postcode: "NE2 2NE",
-    //   email: "o.elkheir1@newcastle.ac.uk",
-    // };
+  getUserInfo(callback) {
+    const info = axios
+      .get("/api/application", {
+        headers: {
+          "x-auth-token": this.JWTToken,
+        },
+      })
+      .then((data) => {
+        callback(undefined, data);
+        console.log(data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+        console.log(error);
+      });
   }
 
-  getAccountInfo() {
-    const balance = axios.get('/api/accounts/balance', {headers: {
-      "x-auth-token": this.JWTToken
-    }})
-    
-    //return { current_balance: "1232.23" };
-    
+  getAccountInfo(callback) {
+    const balance = axios
+      .get("/api/accounts/balance", {
+        headers: {
+          "x-auth-token": this.JWTToken,
+        },
+      })
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
   }
 
   getTransactions(callback) {
@@ -73,7 +79,7 @@ class ApplicationPage extends Component {
         },
       })
       .then((data) => {
-        callback(undefined, data.data);
+        callback(undefined, data);
       })
       .catch((error) => {
         callback(error, undefined);
@@ -82,12 +88,21 @@ class ApplicationPage extends Component {
   }
 
   getPayments(callback) {
-    const data = axios.get("/api/transactions", {
-      headers: {
-        "content-type": "application/json",
-        "x-auth-token": this.JWTToken,
-      },
-    });
+    const data = axios
+      .get("/api/transactions", {
+        headers: {
+          "content-type": "application/json",
+          "x-auth-token": this.JWTToken,
+        },
+      })
+      .then((data) => {
+        callback(undefined, data);
+        console.log(data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+        console.log(error);
+      });
   }
 
   onOverview() {
@@ -95,8 +110,8 @@ class ApplicationPage extends Component {
       return {
         current_page: (
           <OverviewPage
-            userInfo={this.getUserInfo()}
-            accountInfo={this.getAccountInfo()}
+            userInfo={this.getUserInfo}
+            accountInfo={this.getAccountInfo}
             getTransactions={this.getTransactions}
           />
         ),

@@ -131,7 +131,7 @@ router.post("/freeze/:id", auth, async (req, res) => {
 // @desc    Create an account
 // @access  Private
 router.get("/balance", auth, async (req, res) => {
-  const account = await accounts.find({
+  const account = await Account.find({
     userId: req.user.id,
     savingsAccount: false,
   });
