@@ -10,9 +10,7 @@ class AppNavbar extends Component {
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);
-    this.onSavingsPot = this.onSavingsPot.bind(this);
     this.onPayments = this.onPayments.bind(this);
-    this.onHelp = this.onHelp.bind(this);
     this.onAccount = this.onAccount.bind(this);
   }
 
@@ -24,16 +22,8 @@ class AppNavbar extends Component {
     this.props.onSpending();
   }
 
-  onSavingsPot() {
-    this.props.onSavingsPot();
-  }
-
   onPayments() {
     this.props.onPayments();
-  }
-
-  onHelp() {
-    this.props.onHelp();
   }
 
   onAccount() {
@@ -67,15 +57,6 @@ class AppNavbar extends Component {
           <Nav className="mr-auto">
             <Nav.Link onClick={this.onOverview}>Overview</Nav.Link>
             <Nav.Link onClick={this.onSpending}>Spending</Nav.Link>
-            <NavDropdown title="Savings Pots" id="collasible-nav-dropdown">
-              <NavDropdown.Item onClick={this.onSavingsPot}>
-                Open Pot
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={this.onSavingsPot}>
-                Your Pots
-              </NavDropdown.Item>
-            </NavDropdown>
             <NavDropdown title="Payments" id="collasible-nav-dropdown">
               <NavDropdown.Item onClick={this.onPayments}>
                 Send a Payment
@@ -92,7 +73,6 @@ class AppNavbar extends Component {
           <Nav>
             <NavDropdown title="Account Details" id="collasible-nav-dropdown">
               <NavDropdown.Item onClick={this.onAccount}>View</NavDropdown.Item>
-              <NavDropdown.Item onClick={this.onHelp}>Help</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={this.onAccount}>
                 Change Password

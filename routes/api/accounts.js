@@ -133,9 +133,9 @@ router.post("/freeze/:id", auth, async (req, res) => {
 router.get("/balance", auth, async (req, res) => {
   const account = await Account.find({
     userId: req.user.id,
-    savingsAccount: false,
   });
 
+  console.log(account);
   res.send(account.currentBalance);
 });
 

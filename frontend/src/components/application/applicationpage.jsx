@@ -13,6 +13,7 @@ class ApplicationPage extends Component {
   constructor(props) {
     super(props);
 
+    //Should be a cookie but ran out of time to implement appropriate middleware.
     this.JWTToken = sessionStorage.getItem("x-auth-token");
 
     this.onOverview = this.onOverview.bind(this);
@@ -29,8 +30,8 @@ class ApplicationPage extends Component {
     this.state = {
       current_page: (
         <OverviewPage
-          userInfo={this.getUserInfo()}
-          accountInfo={this.getAccountInfo()}
+          userInfo={this.getUserInfo}
+          accountInfo={this.getAccountInfo}
           getTransactions={this.getTransactions}
         />
       ),
@@ -79,7 +80,7 @@ class ApplicationPage extends Component {
         },
       })
       .then((data) => {
-        callback(undefined, data);
+        callback(undefined, data.data);
       })
       .catch((error) => {
         callback(error, undefined);
@@ -146,7 +147,7 @@ class ApplicationPage extends Component {
   onAccount() {
     this.setState(() => {
       return {
-        current_page: <AccountPage userInfo={this.getUserInfo()} />,
+        current_page: <AccountPage userInfo={this.getUserInfo} />,
       };
     });
   }

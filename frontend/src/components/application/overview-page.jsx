@@ -7,18 +7,37 @@ class OverviewPage extends Component {
     super(props);
 
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
+    this.getCurrentBalance = this.getCurrentBalance.bind(this);
 
     this.state = {
       current_balance: this.formatCurrency(0),
+      user_info: "",
     };
   }
 
+  componentDidMount() {
+    this.getUserInfo();
+    this.getCurrentBalance();
+  }
+
   getCurrentBalance() {
-    this.props.userInfo((error, data) => {
+    this.props.accountInfo((error, data) => {
       if (error) {
-        return this.setState({ current_balance: "0" });
+        return this.setState({ current_balance: this.formatCurrency(0) });
       }
       console.log(data);
+    });
+  }
+
+  getUserInfo() {
+    this.props.userInfo((error, data) => {
+      if (error) {
+        return this.setState({
+          user_info: { title: "AuthError", firstname: "AuthError" },
+        });
+      }
+      this.setState({ user_info: data.data });
     });
   }
 
@@ -37,7 +56,7 @@ class OverviewPage extends Component {
         <div className="row justify-content-center">
           <div className="col">
             <div className="page-title">
-              Welcome back, {this.props.userInfo.firstname}
+              Welcome back, {this.state.user_info.firstname}
             </div>
           </div>
         </div>
@@ -47,7 +66,7 @@ class OverviewPage extends Component {
               <span className="current-balance-title">Current Balance</span>
               <br />
               <span className="current-balance-amount">
-                {this.formatCurrency(this.state.current_balance)}
+                {this.state.current_balance}
               </span>
               <br />
               <span className="current-balance-title">Savings Pots</span>
