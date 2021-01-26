@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
 
+const auth = require("../../middleware/auth");
 const encryptionTool = require("../../utils/encryptiontool");
 const {
   requireFirstname,
@@ -156,5 +157,56 @@ router.post(
 // @route   POST api/users/update
 // @desc    Update user info
 // @access  Private
+router.post("/update", auth, async (req, res) => {
+  let user = await User.findById(req.user.id);
+
+  const {
+    title,
+    firstname,
+    lastname,
+    phoneno,
+    dob,
+    uni,
+    course,
+    address,
+    city,
+    postcode,
+    email,
+  } = req.body;
+
+  const userUpdate = {};
+  if (title) userUpdate.title = title;
+  if (firstname) userUpdate.firstname = firstname;
+  if (lastname) userUpdate.lastname = lastname;
+  if (phoneno) userUpdate.phoneno = phoneno;
+  if (dob) userUpdate.dob = dob;
+  if (uni) userUpdate.uni = uni;
+  if (course) userUpdate.course = course;
+  if (address) userUpdate.city = city;
+  if (postcode) userUpdate.postcode = email;
+
+  let encryptedData = {};
+
+  try {
+    // Encrypts data
+    for (const [key, value] of Object.entries(userUpdate)) {
+      encryptedData[key] = encryptionTool.encryptMessage(
+        "keys/publickey.pem",
+        value
+      );
+    }
+
+    user = await User.findOneAndUpdate(
+      { id: req.user.id },
+      { $set: encryptedData },
+      { new: true }
+    );
+
+    return res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 
 module.exports = router;
