@@ -159,3 +159,7 @@ body {
 .auth-alert-message {
   z-index: 11;
 }
+
+.otp-input {
+  text-align: center;
+}

@@ -85,7 +85,7 @@ class LoginForm extends Component {
       if (error) {
         return alert("The username/password is incorrect.");
       }
-      this.setState({ form: <TwoFAForm /> });
+      this.setState({ form: <TwoFAForm userID={data} /> });
     });
   }
 
@@ -98,8 +98,7 @@ class LoginForm extends Component {
         if (response.data.errors) {
           throw response.data.errors;
         }
-        callback(undefined, response.data.token);
-        localStorage.setItem("x-auth-token", response.data.token);
+        callback(undefined, response.data);
       })
       .catch((error) => {
         callback(error, undefined);

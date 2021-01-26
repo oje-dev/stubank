@@ -14,6 +14,7 @@ class ApplicationPage extends Component {
     super(props);
 
     this.JWTToken = localStorage.getItem("x-auth-token");
+    console.log(localStorage.getItem("x-auth-token"));
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);
@@ -61,7 +62,7 @@ class ApplicationPage extends Component {
       .get("/api/transactions", {
         headers: {
           "content-type": "application/json",
-          "x-auth-token": this.mockJWTToken,
+          "x-auth-token": this.JWTToken,
         },
       })
       .then((data) => {
@@ -77,7 +78,7 @@ class ApplicationPage extends Component {
     const data = axios.get("/api/transactions", {
       headers: {
         "content-type": "application/json",
-        "x-auth-token": this.mockJWTToken,
+        "x-auth-token": this.JWTToken,
       },
     });
   }
