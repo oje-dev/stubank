@@ -61,7 +61,7 @@ class ApplicationPage extends Component {
       .get("/api/transactions", {
         headers: {
           "content-type": "application/json",
-          "x-auth-token": this.mockJWTToken,
+          "x-auth-token": this.JWTToken,
         },
       })
       .then((data) => {
@@ -77,7 +77,7 @@ class ApplicationPage extends Component {
     const data = axios.get("/api/transactions", {
       headers: {
         "content-type": "application/json",
-        "x-auth-token": this.mockJWTToken,
+        "x-auth-token": this.JWTToken,
       },
     });
   }

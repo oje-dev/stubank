@@ -29,7 +29,6 @@ const gentoken = (user, address) => {
       }
     }
   );
-  console.log("Sent!");
 };
 
 const checktoken = (token, user) => {

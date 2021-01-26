@@ -44,11 +44,11 @@ router.post(
 );
 
 router.post("/otp", async (req, res) => {
-  if (otp.checktoken(req.body.otp, req.body.id)) {
+  if (otp.checktoken(req.body.otp, req.body.userID)) {
     // Return jsonwebtoken
     const payload = {
       user: {
-        id: req.body.id,
+        id: req.body.userID,
       },
     };
 
