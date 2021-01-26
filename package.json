@@ -1,0 +1,30 @@
+{
+  "name": "loginformtest",
+  "version": "1.0.0",
+  "description": "Test register form for StuBank",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server",
+    "server": "nodemon server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "Sam Oldham",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.3",
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.13",
+    "speakeasy": "^2.0.0",
+    "ws": "^7.4.2"
+  },
+  "devDependencies": {
+    "@sendgrid/mail": "^7.4.2",
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.7"
+  }
+}
