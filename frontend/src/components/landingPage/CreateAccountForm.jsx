@@ -93,9 +93,9 @@ class CreateAccountForm extends Component {
     event.preventDefault();
     this.sendRequest((error, data) => {
       if (error) {
+        console.log(error);
         return alert(error);
       }
-      console.log(error);
       console.log(data);
     });
   }
@@ -107,10 +107,9 @@ class CreateAccountForm extends Component {
       })
       .then((response) => {
         if (response.data.errors) {
-          return callback(response.data.errors, undefined);
+          throw response.data.errors;
         }
         callback(undefined, response.data.token);
-        localStorage.setItem('x-auth-token', response.data.token);
       })
       .catch((error) => {
         callback(error, undefined);
