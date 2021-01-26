@@ -5,7 +5,7 @@ import ApplicationPage from "./components/application/applicationpage.jsx";
 import LandingPage from "./components/landingPage/landingpage.jsx";
 
 function App() {
-  return <ApplicationPage />;
+  return <LandingPage />;
 }
 
 export default App;

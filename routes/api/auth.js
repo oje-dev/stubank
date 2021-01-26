@@ -8,6 +8,7 @@ const {
   requireEmailExists,
   requireValidPassword,
 } = require("../../middleware/validators/login");
+const otp = require("../../utils/totp");
 
 const User = require("../../models/User");
 
@@ -32,27 +33,37 @@ router.post(
 
       let user = await User.findOne({ emailHashed });
 
-      // Return jsonwebtoken
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+      otp.gentoken(user.id, req.body.email);
 
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
+      res.send(user.id);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error");
     }
   }
 );
+
+router.post("/otp", async (req, res) => {
+  if (otp.checktoken(req.body.otp, req.body.id)) {
+    // Return jsonwebtoken
+    const payload = {
+      user: {
+        id: req.body.id,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } else {
+    res.send("Invalid one time passcode.");
+  }
+});
 
 module.exports = router;
