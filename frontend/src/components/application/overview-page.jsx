@@ -35,7 +35,6 @@ class OverviewPage extends Component {
             </div>
           </div>
         </div>
-
         <div className="row">
           <div className="col-md-6">
             <p className="recent-payment-header">Recent Transactions</p>

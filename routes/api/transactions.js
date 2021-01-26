@@ -7,16 +7,10 @@ const encryptionTool = require("../../utils/encryptiontool");
 
 const Transaction = require("../../models/Transaction");
 const Account = require("../../models/Account");
-<<<<<<< routes/api/transactions.js
 const otp = require("../../utils/totp");
-=======
-const User = require("../../models/User");
 
->>>>>>> routes/api/transactions.js
 const router = express.Router();
-const encryptionTool = require("../../utils/encryptiontool");
 const User = require("../../models/User");
-const config = require("config");
 
 // @route   POST api/transactions
 // @desc    Do a transaction
@@ -111,8 +105,8 @@ router.post("/", auth, async (req, res) => {
             "/keys/privatekey.pem",
             config.get("passphrase"),
             email.email
-          )
-          otp.gentoken(req.user.id,emailDecrypted)
+          );
+          otp.gentoken(req.user.id, emailDecrypted);
         } else {
           // a 2FA check would go here and else would be removed and if it was completed: this code would run:
           transaction = new Transaction(transactionFields);
@@ -153,17 +147,17 @@ router.get("/", auth, async (req, res) => {
 // @route GET api/transactions/predict
 // @desc Predict future spending
 // @access Private
-router.get("/predict", auth, async (req, res) => {
-  const transactions = await Transaction.find({ userId: req.user.id });
-  if transactions.
-  const stringifiedTransaction = JSON.stringify(transactions);
-  client.req(
-    stringifiedTransaction,
-    "ws://0.0.0.0:5003/",
-    (predictionAmount) => {
-      res.send(predictionAmount);
-    }
-  );
-});
+// router.get("/predict", auth, async (req, res) => {
+//   const transactions = await Transaction.find({ userId: req.user.id });
+//   if transactions.
+//   const stringifiedTransaction = JSON.stringify(transactions);
+//   client.req(
+//     stringifiedTransaction,
+//     "ws://0.0.0.0:5003/",
+//     (predictionAmount) => {
+//       res.send(predictionAmount);
+//     }
+//   );
+// });
 
 module.exports = router;

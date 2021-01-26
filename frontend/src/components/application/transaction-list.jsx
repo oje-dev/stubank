@@ -8,9 +8,11 @@ class TransactionList extends React.Component {
     this.getTransactions = this.getTransactions.bind(this);
 
     this.state = {
-      transactions: [{ merchant_name: "Loading..." }],
+      transactions: [{ recipientName: "Loading..." }],
     };
+  }
 
+  componentDidMount() {
     this.getTransactions();
   }
 
@@ -20,13 +22,12 @@ class TransactionList extends React.Component {
         return this.setState({
           transactions: [
             {
-              merchant_name:
-                "Error retrieving transaction information, please refresh the page.",
+              recipientName: "Authorisation Failed",
             },
           ],
         });
       }
-      this.setState({ transactions: data.data });
+      this.setState({ transactions: data });
     });
   }
 

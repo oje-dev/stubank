@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default class TwoFAForm extends React.Component {
+class TwoFAForm extends Component {
   render() {
     return (
       <div className="fade-in container-fluid ">
@@ -32,3 +32,5 @@ export default class TwoFAForm extends React.Component {
     );
   }
 }
+
+export default TwoFAForm;

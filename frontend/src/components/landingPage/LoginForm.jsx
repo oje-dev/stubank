@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import axios from "axios";
+import TwoFAForm from "./2FAForm.jsx";
 
-export default class LoginForm extends React.Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
 
@@ -11,52 +12,7 @@ export default class LoginForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
 
-    this.state = {
-      email: "",
-      password: "",
-    };
-  }
-
-  handleChangeEmail(event) {
-    this.setState({ email: event.target.value });
-  }
-
-  handleChangePassword(event) {
-    this.setState({
-      password: event.target.value,
-    });
-  }
-
-  onSubmit(event) {
-    event.preventDefault();
-    this.sendRequest((error, data) => {
-      if (error) {
-        return alert(error);
-      }
-      console.log(error);
-      console.log(data);
-    });
-  }
-
-  sendRequest(callback) {
-    axios
-      .post("/api/auth", this.state, {
-        headers: { "content-type": "application/json" },
-      })
-      .then((response) => {
-        if (response.data.errors) {
-          return callback(response.data.errors, undefined);
-        }
-        callback(undefined, response.data.token);
-        localStorage.setItem('x-auth-token', response.data.token);
-      })
-      .catch((error) => {
-        callback(error, undefined);
-      });
-  }
-  
-  render() {
-    return (
+    this.loginForm = (
       <div className="loginForm fade-in">
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
@@ -105,5 +61,54 @@ export default class LoginForm extends React.Component {
         </form>
       </div>
     );
+
+    this.state = {
+      email: "",
+      password: "",
+      form: this.loginForm,
+    };
+  }
+
+  handleChangeEmail(event) {
+    this.setState({ email: event.target.value });
+  }
+
+  handleChangePassword(event) {
+    this.setState({
+      password: event.target.value,
+    });
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    this.sendRequest((error, data) => {
+      if (error) {
+        return alert("The username/password is incorrect.");
+      }
+      this.setState({ form: <TwoFAForm /> });
+    });
+  }
+
+  sendRequest(callback) {
+    axios
+      .post("/api/auth", this.state, {
+        headers: { "content-type": "application/json" },
+      })
+      .then((response) => {
+        if (response.data.errors) {
+          throw response.data.errors;
+        }
+        callback(undefined, response.data.token);
+        localStorage.setItem("x-auth-token", response.data.token);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+
+  render() {
+    return <div>{this.state.form}</div>;
   }
 }
+
+export default LoginForm;

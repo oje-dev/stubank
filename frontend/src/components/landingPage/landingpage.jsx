@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import LandingForm from "./LandingForm.jsx";
 import CreateAccountForm from "./CreateAccountForm.jsx";
 import LoginForm from "./LoginForm.jsx";
-import TwoFAForm from "./2FAForm.jsx";
 
 class LandingPage extends Component {
   constructor(props) {
