@@ -127,4 +127,16 @@ router.post("/freeze/:id", auth, async (req, res) => {
   }
 });
 
+// @route   POST api/account
+// @desc    Create an account
+// @access  Private
+router.get("/balance", auth, async (req, res) => {
+  const account = await accounts.find({
+    userId: req.user.id,
+    savingsAccount: false,
+  });
+
+  res.send(account.currentBalance);
+});
+
 module.exports = router;

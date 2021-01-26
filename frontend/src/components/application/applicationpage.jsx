@@ -36,24 +36,32 @@ class ApplicationPage extends Component {
   }
 
   getUserInfo() {
-    return {
-      title: "Mr.",
-      firstname: "Oliver",
-      lastname: "El-kheir",
-      phoneno: "+447447800084",
-      dob: "01/10/1997",
-      uni: "Newcastle University",
-      course: "G600",
-      address: "19 Cavendish Place, Jesmond",
-      city: "Newcastle-upon-Tyne",
-      postcode: "NE2 2NE",
-      email: "o.elkheir1@newcastle.ac.uk",
-    };
+   const info = axios.get('/api/application', { headers: {
+    "x-auth-token": this.JWTToken
+   }}) 
+
+    // return {
+    //   title: "Mr.",
+    //   firstname: "Oliver",
+    //   lastname: "El-kheir",
+    //   phoneno: "+447447800084",
+    //   dob: "01/10/1997",
+    //   uni: "Newcastle University",
+    //   course: "G600",
+    //   address: "19 Cavendish Place, Jesmond",
+    //   city: "Newcastle-upon-Tyne",
+    //   postcode: "NE2 2NE",
+    //   email: "o.elkheir1@newcastle.ac.uk",
+    // };
   }
 
   getAccountInfo() {
-    return { current_balance: "1232.23" };
-    //axios.post('/api/accounts')
+    const balance = axios.get('/api/accounts/balance', {headers: {
+      "x-auth-token": this.JWTToken
+    }})
+    
+    //return { current_balance: "1232.23" };
+    
   }
 
   getTransactions(callback) {

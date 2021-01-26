@@ -129,24 +129,11 @@ router.post(
       await account.save();
 
       // Change to how front end wants it
-      console.log(account);
+      //console.log(account);
 
-      // Return jsonwebtoken
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+      otp.gentoken(user.id, req.body.email);
 
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
+      res.send(user.id);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error");
