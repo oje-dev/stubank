@@ -150,23 +150,21 @@ class ApplicationPage extends Component {
 
   render() {
     return (
-      <div>
-        <div className="fade-in container-fluid my-container vh-100">
-          <div className="row">
-            <div className="col">
-              <AppNavbar
-                onOverview={this.onOverview}
-                onSpending={this.onSpending}
-                onSavingsPot={this.onSavingsPot}
-                onPayments={this.onPayments}
-                onHelp={this.onHelp}
-                onAccount={this.onAccount}
-              />
-            </div>
+      <div className="fade-in container-fluid my-container vh-100">
+        <div className="row">
+          <div className="col">
+            <AppNavbar
+              onOverview={this.onOverview}
+              onSpending={this.onSpending}
+              onSavingsPot={this.onSavingsPot}
+              onPayments={this.onPayments}
+              onHelp={this.onHelp}
+              onAccount={this.onAccount}
+            />
           </div>
-          {this.state.current_page}
-          {!this.state.isValid && <InvalidAuth />}
         </div>
+        {this.state.current_page}
+        {!this.state.isValid && <InvalidAuth />}
       </div>
     );
   }

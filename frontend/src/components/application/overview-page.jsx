@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import TransactionList from "./transaction-list.jsx";
 import TransfersList from "./transfers-list.jsx";
+import SpendingBar from "./spendingbar.jsx";
+import DigitalCard from "./digital-card.jsx";
 
 class OverviewPage extends Component {
   constructor(props) {
@@ -56,6 +58,11 @@ class OverviewPage extends Component {
     return (
       <div className="fade-in">
         <div className="row justify-content-center">
+          <div className="col-12 col-sm-6 col-md-5 col-lg-3">
+            <DigitalCard />
+          </div>
+        </div>
+        <div className="row justify-content-center">
           <div className="col">
             <div className="page-title">
               Welcome back, {this.state.user_info.firstname}
@@ -71,7 +78,11 @@ class OverviewPage extends Component {
                 {this.state.current_balance}
               </span>
               <br />
-              <span className="current-balance-title">Savings Pots</span>
+              <div className="row justify-content-center">
+                <div className="col-10 col-sm-6 col-md-4 col-lg-2">
+                  <SpendingBar />
+                </div>
+              </div>
             </div>
           </div>
         </div>
