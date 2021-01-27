@@ -9,17 +9,12 @@ class AppNavbar extends Component {
     super(props);
 
     this.onOverview = this.onOverview.bind(this);
-    this.onSpending = this.onSpending.bind(this);
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
   }
 
   onOverview() {
     this.props.onOverview();
-  }
-
-  onSpending() {
-    this.props.onSpending();
   }
 
   onPayments() {
@@ -56,7 +51,6 @@ class AppNavbar extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link onClick={this.onOverview}>Overview</Nav.Link>
-            <Nav.Link onClick={this.onSpending}>Spending</Nav.Link>
             <NavDropdown title="Payments" id="collasible-nav-dropdown">
               <NavDropdown.Item onClick={this.onPayments}>
                 Send a Payment
