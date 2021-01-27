@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import OverviewPage from "./overview-page.jsx";
 import SpendingPage from "./spendingpage.jsx";
-import SavingsPage from "./savingspage.jsx";
 import PaymentsPage from "./paymentspage.jsx";
 import AccountPage from "./accountpage.jsx";
-import HelpPage from "./helppage.jsx";
 import InvalidAuth from "./invalidauth.jsx";
 import AppNavbar from "./app-navbar.jsx";
 
@@ -18,21 +16,21 @@ class ApplicationPage extends Component {
 
     this.onOverview = this.onOverview.bind(this);
     this.onSpending = this.onSpending.bind(this);
-    this.onSavingsPot = this.onSavingsPot.bind(this);
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
-    this.onHelp = this.onHelp.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
-    this.getAccountInfo = this.getAccountInfo.bind(this);
+    this.getCurrentBalance = this.getCurrentBalance.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
     this.getPayments = this.getPayments.bind(this);
+    this.getDigitalCard = this.getDigitalCard.bind(this);
 
     this.state = {
       current_page: (
         <OverviewPage
           userInfo={this.getUserInfo}
-          accountInfo={this.getAccountInfo}
+          accountInfo={this.getCurrentBalance}
           getTransactions={this.getTransactions}
+          getDigitalCard={this.getDigitalCard}
         />
       ),
       isValid: true,
@@ -51,10 +49,11 @@ class ApplicationPage extends Component {
       })
       .catch((error) => {
         callback(error, undefined);
+        this.setState({ isValid: false });
       });
   }
 
-  getAccountInfo(callback) {
+  getCurrentBalance(callback) {
     const balance = axios
       .get("/api/accounts/balance", {
         headers: {
@@ -66,6 +65,7 @@ class ApplicationPage extends Component {
       })
       .catch((error) => {
         callback(error, undefined);
+        this.setState({ isValid: false });
       });
   }
 
@@ -99,6 +99,19 @@ class ApplicationPage extends Component {
       })
       .catch((error) => {
         callback(error, undefined);
+        this.setState({ isValid: false });
+      });
+  }
+
+  getDigitalCard(callback) {
+    const cardInformation = axios
+      .get("/api/accounts", { headers: { "x-auth-token": this.JWTToken } })
+      .then((data) => {
+        callback(undefined, data.data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+        this.setState({ isValid: false });
       });
   }
 
@@ -108,8 +121,9 @@ class ApplicationPage extends Component {
         current_page: (
           <OverviewPage
             userInfo={this.getUserInfo}
-            accountInfo={this.getAccountInfo}
+            accountInfo={this.getCurrentBalance}
             getTransactions={this.getTransactions}
+            getDigitalCard={this.getDigitalCard}
           />
         ),
       };
@@ -122,21 +136,9 @@ class ApplicationPage extends Component {
     });
   }
 
-  onSavingsPot() {
-    this.setState(() => {
-      return { current_page: <SavingsPage /> };
-    });
-  }
-
   onPayments() {
     this.setState(() => {
       return { current_page: <PaymentsPage /> };
-    });
-  }
-
-  onHelp() {
-    this.setState(() => {
-      return { current_page: <HelpPage /> };
     });
   }
 
@@ -156,9 +158,7 @@ class ApplicationPage extends Component {
             <AppNavbar
               onOverview={this.onOverview}
               onSpending={this.onSpending}
-              onSavingsPot={this.onSavingsPot}
               onPayments={this.onPayments}
-              onHelp={this.onHelp}
               onAccount={this.onAccount}
             />
           </div>

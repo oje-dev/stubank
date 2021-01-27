@@ -13,7 +13,7 @@ class OverviewPage extends Component {
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
 
     this.state = {
-      current_balance: this.formatCurrency(0),
+      current_balance: "Loading...",
       user_info: "",
     };
   }
@@ -59,7 +59,10 @@ class OverviewPage extends Component {
       <div className="fade-in">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-6 col-md-5 col-lg-3">
-            <DigitalCard />
+            <DigitalCard
+              getDigitalCard={this.props.getDigitalCard}
+              userInfo={this.props.userInfo}
+            />
           </div>
         </div>
         <div className="row justify-content-center">

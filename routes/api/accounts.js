@@ -1,4 +1,5 @@
 const express = require("express");
+const config = require("config");
 
 const auth = require("../../middleware/auth");
 const Account = require("../../models/Account");
@@ -45,22 +46,23 @@ router.post("/", auth, async (req, res) => {
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {
-    const accounts = await Account.find({
+    const account = await Account.findOne({
       userId: req.user.id,
+      savingsAccount: false,
     });
 
-    accounts.forEach((element) => {
-      element.cardNumber = encryptionTool.decryptMessage(
-        "keys/publickey.pem",
-        element.cardNumber
-      );
-      element.accountNumber = encryptionTool.decryptMessage(
-        "keys/publickey.pem",
-        element.accountNumber
-      );
-    });
+    account.cardNumber = encryptionTool.decryptMessage(
+      "keys/privatekey.pem",
+      config.get("passphrase"),
+      account.cardNumber
+    );
+    account.accountNumber = encryptionTool.decryptMessage(
+      "keys/privatekey.pem",
+      config.get("passphrase"),
+      account.accountNumber
+    );
 
-    res.json(accounts);
+    res.json(account);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
