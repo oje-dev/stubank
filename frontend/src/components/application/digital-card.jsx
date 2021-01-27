@@ -9,6 +9,7 @@ class DigitalCard extends React.Component {
     super(props);
 
     this.getCardDetails = this.getCardDetails.bind(this);
+    this.getUserDetails = this.getUserDetails.bind(this);
 
     this.state = {
       name: "Loading...",
@@ -43,7 +44,7 @@ class DigitalCard extends React.Component {
   }
 
   getUserDetails() {
-    this.props.userInfo((error, data) => {
+    this.props.getUserInfo((error, data) => {
       if (error) {
         return this.setState({ name: "AuthError" });
       }

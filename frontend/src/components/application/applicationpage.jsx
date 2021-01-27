@@ -23,14 +23,16 @@ class ApplicationPage extends Component {
     this.getUserInfo = this.getUserInfo.bind(this);
     this.getPayments = this.getPayments.bind(this);
     this.getDigitalCard = this.getDigitalCard.bind(this);
+    this.getPredictedSpending = this.getPredictedSpending.bind(this);
 
     this.state = {
       current_page: (
         <OverviewPage
-          userInfo={this.getUserInfo}
-          accountInfo={this.getCurrentBalance}
+          getUserInfo={this.getUserInfo}
+          getCurrentBalance={this.getCurrentBalance}
           getTransactions={this.getTransactions}
           getDigitalCard={this.getDigitalCard}
+          getPredictedSpending={this.getPredictedSpending}
         />
       ),
       isValid: true,
@@ -115,15 +117,30 @@ class ApplicationPage extends Component {
       });
   }
 
+  getPredictedSpending(callback) {
+    const predictedSpend = axios
+      .get("/api/transactions/predict", {
+        headers: { "x-auth-token": this.JWTToken },
+      })
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+        this.setState({ isValid: false });
+      });
+  }
+
   onOverview() {
     this.setState(() => {
       return {
         current_page: (
           <OverviewPage
-            userInfo={this.getUserInfo}
-            accountInfo={this.getCurrentBalance}
+            getUserInfo={this.getUserInfo}
+            getCurrentBalance={this.getCurrentBalance}
             getTransactions={this.getTransactions}
             getDigitalCard={this.getDigitalCard}
+            getPredictedSpending={this.getPredictedSpending}
           />
         ),
       };

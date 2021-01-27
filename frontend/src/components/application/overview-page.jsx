@@ -13,7 +13,7 @@ class OverviewPage extends Component {
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
 
     this.state = {
-      current_balance: "Loading...",
+      current_balance: 0,
       user_info: "",
     };
   }
@@ -24,18 +24,18 @@ class OverviewPage extends Component {
   }
 
   getCurrentBalance() {
-    this.props.accountInfo((error, data) => {
+    this.props.getCurrentBalance((error, data) => {
       if (error) {
-        return this.setState({ current_balance: this.formatCurrency(0) });
+        return this.setState({ current_balance: 0 });
       }
       this.setState({
-        current_balance: this.formatCurrency(data.data.balance),
+        current_balance: data.data.balance,
       });
     });
   }
 
   getUserInfo() {
-    this.props.userInfo((error, data) => {
+    this.props.getUserInfo((error, data) => {
       if (error) {
         return this.setState({
           user_info: { title: "AuthError", firstname: "AuthError" },
@@ -61,7 +61,8 @@ class OverviewPage extends Component {
           <div className="col-12 col-sm-6 col-md-5 col-lg-3">
             <DigitalCard
               getDigitalCard={this.props.getDigitalCard}
-              userInfo={this.props.userInfo}
+              getUserInfo={this.props.getUserInfo}
+              getCurrentBalance={this.props.getCurrentBalance}
             />
           </div>
         </div>
@@ -78,12 +79,19 @@ class OverviewPage extends Component {
               <span className="current-balance-title">Current Balance</span>
               <br />
               <span className="current-balance-amount">
-                {this.state.current_balance}
+                {this.formatCurrency(this.state.current_balance)}
               </span>
               <br />
               <div className="row justify-content-center">
                 <div className="col-10 col-sm-6 col-md-4 col-lg-2">
-                  <SpendingBar />
+                  <span className="current-balance-title">
+                    Predicted Spending
+                  </span>
+                  <SpendingBar
+                    currentBalance={this.state.current_balance}
+                    getCurrentBalance={this.props.getCurrentBalance}
+                    getPredictedSpending={this.props.getPredictedSpending}
+                  />
                 </div>
               </div>
             </div>
