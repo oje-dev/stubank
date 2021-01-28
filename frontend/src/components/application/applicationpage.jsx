@@ -129,6 +129,27 @@ class ApplicationPage extends Component {
       });
   }
 
+  changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
+    axios
+      .post("/api/users/password", {
+        headers: {
+          "x-auth-token": this.JWTToken,
+          "content-type": "application/json",
+        },
+        body: {
+          newPassword: inputNewPassword,
+          password: currentPassword,
+          password2: confirmPassword,
+        },
+      })
+      .then(() => {
+        callback(undefined);
+      })
+      .catch((error) => {
+        callback(error);
+      });
+  }
+
   onOverview() {
     this.setState(() => {
       return {
@@ -154,7 +175,12 @@ class ApplicationPage extends Component {
   onAccount() {
     this.setState(() => {
       return {
-        current_page: <AccountPage getUserInfo={this.getUserInfo} />,
+        current_page: (
+          <AccountPage
+            getUserInfo={this.getUserInfo}
+            changePassword={this.changePassword}
+          />
+        ),
       };
     });
   }

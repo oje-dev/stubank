@@ -57,7 +57,7 @@ module.exports = {
     }),
 
   requirePassword: check(
-    "password",
+    "newPassword",
     "Password must be between 6 and 20 characters"
   )
     .trim()

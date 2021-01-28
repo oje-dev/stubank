@@ -1,10 +1,19 @@
 import React, { Component } from "react";
+import Table from "react-bootstrap/Table";
 
 class AccountPage extends Component {
   constructor(props) {
     super(props);
 
     this.getAccountInfo = this.getAccountInfo.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.handleChangeConfirmPassword = this.handleChangeConfirmPassword.bind(
+      this
+    );
+    this.handleChangeCurrentPassword = this.handleChangeCurrentPassword.bind(
+      this
+    );
+    this.handleChangeNewPassword = this.handleChangeNewPassword.bind(this);
 
     this.state = {
       userInfo: {
@@ -20,6 +29,9 @@ class AccountPage extends Component {
         postcode: "Loading...",
         email: "Loading...",
       },
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     };
   }
 
@@ -28,7 +40,10 @@ class AccountPage extends Component {
   }
 
   formatDate(date) {
-    const dateComponents = date.split("/");
+    if (date === "Loading...") {
+      return date;
+    }
+    const dateComponents = date.split("-");
 
     return dateComponents[2]
       .concat("/")
@@ -60,6 +75,43 @@ class AccountPage extends Component {
     });
   }
 
+  onChangePassword(event) {
+    event.preventDefault();
+    console.log(
+      "Current Password " + this.state.currentPassword + "\n",
+      "New Password: " + this.state.newPassword + "\n",
+      "Confirm Password: " + this.state.confirmPassword
+    );
+    if (this.state.newPassword !== this.state.confirmPassword) {
+      return alert("Passwords do not match");
+    }
+    this.props.changePassword(
+      this.state.newPassword,
+      this.state.confirmPassword,
+      this.state.currentPassword,
+      (error) => {
+        if (error) {
+          return alert("Your current password is incorrect.");
+        }
+        alert("Successfully changed password\nPlease login again");
+        sessionStorage.removeItem("x-auth-token");
+        window.location.replace("/");
+      }
+    );
+  }
+
+  handleChangeCurrentPassword(event) {
+    this.setState({ currentPassword: event.target.value });
+  }
+
+  handleChangeNewPassword(event) {
+    this.setState({ newPassword: event.target.value });
+  }
+
+  handleChangeConfirmPassword(event) {
+    this.setState({ confirmPassword: event.target.value });
+  }
+
   render() {
     return (
       <div className="fade-in">
@@ -71,24 +123,203 @@ class AccountPage extends Component {
         <div className="row">
           <div className="col-md-6">
             <p className="recent-payment-header">Personal Information</p>
-            <div className="transaction-container" style={{ padding: "1em" }}>
-              <p>Title: {this.state.userInfo.title}</p>
-              <p>First Name: {this.state.userInfo.firstname}</p>
-              <p>Last Name: {this.state.userInfo.lastname}</p>
-              <p>Phone Number: {this.state.userInfo.phoneno}</p>
-              <p>Date of Birth: {this.state.userInfo.dob}</p>
-              <p>University: {this.state.userInfo.uni}</p>
-              <p>Course Code: {this.state.userInfo.course}</p>
-              <p>Address: {this.state.userInfo.address}</p>
-              <p>City: {this.state.userInfo.city}</p>
-              <p>Postcode: {this.state.userInfo.postcode}</p>
+            <div
+              className="transaction-container"
+              style={{ padding: "1em", height: "75vh" }}
+            >
+              <Table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Title
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.title}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        First Name
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.firstname}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Last Name
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.lastname}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Phone Number
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.phoneno}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Date of Birth
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.formatDate(this.state.userInfo.dob)}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        University
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.uni}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Course Code
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.course}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Address
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.address}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        City
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.city}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        Postcode
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className="recent-payment-header"
+                        style={{ color: "black" }}
+                      >
+                        {this.state.userInfo.postcode}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
             </div>
           </div>
-
           <div className="col-md-6">
             <p className="recent-payment-header">Account Details</p>
-            <div className="transaction-container" style={{ padding: "1em" }}>
-              <form onSubmit={this.onSubmit}>
+            <div
+              className="transaction-container"
+              style={{ padding: "1em", height: "75vh" }}
+            >
+              <form onSubmit={this.onChangePassword}>
                 <p>Email Address: {this.state.userInfo.email}</p>
                 <p>Change Password</p>
                 <div className="form-group">
@@ -133,14 +364,14 @@ class AccountPage extends Component {
                         className="form-control form-control-lrg"
                         required={true}
                         placeholder="•••••••••••"
-                        onChange={this.handleChangeNewConfirmPassword}
+                        onChange={this.handleChangeConfirmPassword}
                       ></input>
                     </div>
                   </div>
                 </div>
                 <div className="form-group">
                   <div className="form-row justify-content-center">
-                    <div className="col-6 col-md-4">
+                    <div className="col-6 col-md-5">
                       <input
                         type="submit"
                         value="Change Password"

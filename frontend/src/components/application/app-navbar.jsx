@@ -54,13 +54,7 @@ class AppNavbar extends Component {
             <Nav.Link onClick={this.onPayments}>Payments</Nav.Link>
           </Nav>
           <Nav>
-            <NavDropdown title="Account Details" id="collasible-nav-dropdown">
-              <NavDropdown.Item onClick={this.onAccount}>View</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={this.onAccount}>
-                Change Password
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link onClick={this.onAccount}>Your Account</Nav.Link>
 
             <Nav.Link onClick={this.onLogout} href="/">
               Logout

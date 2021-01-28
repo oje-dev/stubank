@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require("config");
 const otp = require("../../utils/totp");
+const { requireValidPassword } = require("../../middleware/validators/login");
 
 const auth = require("../../middleware/auth");
 const encryptionTool = require("../../utils/encryptiontool");
@@ -202,7 +203,7 @@ router.post("/update", auth, async (req, res) => {
 // @access  Private
 router.post(
   "/password",
-  [auth, [requirePassword, requirePasswordConfirmation]],
+  [auth, [requirePassword, requirePasswordConfirmation, requireValidPassword]],
   async (req, res) => {
     // Checks for errors
     const errors = validationResult(req);

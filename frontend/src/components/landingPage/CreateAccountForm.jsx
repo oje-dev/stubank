@@ -249,7 +249,7 @@ class CreateAccountForm extends Component {
       city: "",
       postcode: "",
       email: "",
-      password: "",
+      newPassword: "",
       password2: "",
       form: this.createAccountForm,
     };
@@ -301,7 +301,7 @@ class CreateAccountForm extends Component {
 
   handleChangePassword(event) {
     this.setState({
-      password: event.target.value,
+      newPassword: event.target.value,
     });
   }
 
@@ -311,7 +311,7 @@ class CreateAccountForm extends Component {
 
   onSubmit(event) {
     event.preventDefault();
-    if (this.state.password !== this.state.password2) {
+    if (this.state.newPassword !== this.state.password2) {
       return alert("Passwords do not match");
     }
 
