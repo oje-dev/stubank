@@ -47,7 +47,7 @@ class LoginForm extends Component {
                 <input
                   type="submit"
                   value="Login"
-                  className="form-control btn-success"
+                  className="form-control btn-info"
                 ></input>
               </div>
               <div className="col-8 col-md-10 text-right">

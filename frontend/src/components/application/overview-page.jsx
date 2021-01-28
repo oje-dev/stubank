@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import TransactionList from "./transaction-list.jsx";
-import TransfersList from "./transfers-list.jsx";
 import SpendingBar from "./spendingbar.jsx";
 import DigitalCard from "./digital-card.jsx";
 import Popover from "react-bootstrap/Popover";
@@ -48,15 +47,6 @@ class OverviewPage extends Component {
     });
   }
 
-  formatCurrency(amount) {
-    const currencyFormatter = new Intl.NumberFormat("en-GB", {
-      style: "currency",
-      currency: "GBP",
-    });
-
-    return currencyFormatter.format(amount);
-  }
-
   render() {
     return (
       <div className="fade-in">
@@ -82,7 +72,7 @@ class OverviewPage extends Component {
               <span className="current-balance-title">Current Balance</span>
               <br />
               <span className="current-balance-amount">
-                {this.formatCurrency(this.state.current_balance)}
+                {this.props.formatCurrency(this.state.current_balance)}
               </span>
               <br />
               <div className="row justify-content-center">
@@ -126,10 +116,10 @@ class OverviewPage extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <p className="recent-payment-header">Transactions History</p>
+            <p className="recent-payment-header">Transaction History</p>
             <TransactionList
               getTransactions={this.props.getTransactions}
-              currencyFormatter={this.formatCurrency}
+              currencyFormatter={this.props.formatCurrency}
             />
           </div>
         </div>

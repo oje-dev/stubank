@@ -26,7 +26,7 @@ export default class LandingForm extends Component {
         <div className="row justify-content-center">
           <div className="btns">
             <button
-              className="btn-success btnCreateAccount btn-sm"
+              className="btn-info btnCreateAccount btn-sm"
               onClick={this.onCreateAccount}
             >
               Open an Account

@@ -3,6 +3,7 @@ import axios from "axios";
 import OverviewPage from "./overview-page.jsx";
 import PaymentsPage from "./paymentspage.jsx";
 import AccountPage from "./accountpage.jsx";
+import PayeesPage from "./payeespage.jsx";
 import InvalidAuth from "./invalidauth.jsx";
 import AppNavbar from "./app-navbar.jsx";
 
@@ -16,12 +17,15 @@ class ApplicationPage extends Component {
     this.onOverview = this.onOverview.bind(this);
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
+    this.onPayees = this.onPayees.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
-    this.getPayments = this.getPayments.bind(this);
     this.getDigitalCard = this.getDigitalCard.bind(this);
     this.getPredictedSpending = this.getPredictedSpending.bind(this);
+    this.getPayees = this.getPayees.bind(this);
+    this.addPayee = this.addPayee.bind(this);
+    this.deletePayee = this.deletePayee.bind(this);
 
     this.state = {
       current_page: (
@@ -31,6 +35,8 @@ class ApplicationPage extends Component {
           getTransactions={this.getTransactions}
           getDigitalCard={this.getDigitalCard}
           getPredictedSpending={this.getPredictedSpending}
+          getPayees={this.getPayees}
+          formatCurrency={this.formatCurrency}
         />
       ),
       isValid: true,
@@ -86,23 +92,6 @@ class ApplicationPage extends Component {
       });
   }
 
-  getPayments(callback) {
-    const data = axios
-      .get("/api/transactions", {
-        headers: {
-          "content-type": "application/json",
-          "x-auth-token": this.JWTToken,
-        },
-      })
-      .then((data) => {
-        callback(undefined, data);
-      })
-      .catch((error) => {
-        callback(error, undefined);
-        this.setState({ isValid: false });
-      });
-  }
-
   getDigitalCard(callback) {
     const cardInformation = axios
       .get("/api/accounts", { headers: { "x-auth-token": this.JWTToken } })
@@ -129,8 +118,56 @@ class ApplicationPage extends Component {
       });
   }
 
+  getPayees(callback) {
+    const payeesList = axios
+      .get("/api/payees", {
+        headers: { "x-auth-token": this.JWTToken },
+      })
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+        this.setState({ isValid: false });
+      });
+  }
+
+  addPayee(payeeEmail, callback) {
+    const addPayeeReq = axios
+      .post("/api/payees", {
+        headers: {
+          "content-type": "application/json",
+          "x-auth-token": this.JWTToken,
+        },
+        body: { email: payeeEmail },
+      })
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+
+  deletePayee(payeeID, callback) {
+    const addPayeeReq = axios
+      .post("/api/payees", {
+        headers: {
+          "content-type": "application/json",
+          "x-auth-token": this.JWTToken,
+        },
+        body: { id: payeeID },
+      })
+      .then((data) => {
+        callback(undefined, data);
+      })
+      .catch((error) => {
+        callback(error, undefined);
+      });
+  }
+
   changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
-    axios
+    const changePassword = axios
       .post("/api/users/password", {
         headers: {
           "x-auth-token": this.JWTToken,
@@ -150,6 +187,23 @@ class ApplicationPage extends Component {
       });
   }
 
+  sendPayment(sentFrom, sentTo, amount, recipientName, callback) {
+    const sendPayment = axios
+      .post("/api/transactions", {
+        headers: {
+          "content-type": "application/json",
+          "x-auth-token": this.JWTToken,
+        },
+        body: { sentFrom, sentTo, amount, recipientName },
+      })
+      .then(() => {
+        callback(undefined);
+      })
+      .catch((error) => {
+        callback(error);
+      });
+  }
+
   onOverview() {
     this.setState(() => {
       return {
@@ -160,6 +214,8 @@ class ApplicationPage extends Component {
             getTransactions={this.getTransactions}
             getDigitalCard={this.getDigitalCard}
             getPredictedSpending={this.getPredictedSpending}
+            getPayees={this.getPayees}
+            formatCurrency={this.formatCurrency}
           />
         ),
       };
@@ -168,7 +224,16 @@ class ApplicationPage extends Component {
 
   onPayments() {
     this.setState(() => {
-      return { current_page: <PaymentsPage /> };
+      return {
+        current_page: (
+          <PaymentsPage
+            getCurrentBalance={this.getCurrentBalance}
+            currencyFormatter={this.formatCurrency}
+            getPayees={this.getPayees}
+            sendPayment={this.sendPayment}
+          />
+        ),
+      };
     });
   }
 
@@ -185,6 +250,29 @@ class ApplicationPage extends Component {
     });
   }
 
+  onPayees() {
+    this.setState(() => {
+      return {
+        current_page: (
+          <PayeesPage
+            getPayees={this.getPayees}
+            deletePayee={this.deletePayee}
+            addPayee={this.addPayee}
+          />
+        ),
+      };
+    });
+  }
+
+  formatCurrency(amount) {
+    const currencyFormatter = new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+    });
+
+    return currencyFormatter.format(amount);
+  }
+
   render() {
     return (
       <div className="fade-in container-fluid my-container vh-100">
@@ -192,9 +280,9 @@ class ApplicationPage extends Component {
           <div className="col">
             <AppNavbar
               onOverview={this.onOverview}
-              onSpending={this.onSpending}
               onPayments={this.onPayments}
               onAccount={this.onAccount}
+              onPayees={this.onPayees}
             />
           </div>
         </div>

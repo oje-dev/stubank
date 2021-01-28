@@ -11,6 +11,7 @@ class AppNavbar extends Component {
     this.onOverview = this.onOverview.bind(this);
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
+    this.onPayees = this.onPayees.bind(this);
   }
 
   onOverview() {
@@ -23,6 +24,10 @@ class AppNavbar extends Component {
 
   onAccount() {
     this.props.onAccount();
+  }
+
+  onPayees() {
+    this.props.onPayees();
   }
 
   onLogout() {
@@ -51,7 +56,15 @@ class AppNavbar extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link onClick={this.onOverview}>Overview</Nav.Link>
-            <Nav.Link onClick={this.onPayments}>Payments</Nav.Link>
+            <NavDropdown title="Payments" id="basic-nav-dropdown">
+              <NavDropdown.Item onClick={this.onPayees}>
+                Your Payees
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={this.onPayments}>
+                Send a Payment
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
           <Nav>
             <Nav.Link onClick={this.onAccount}>Your Account</Nav.Link>

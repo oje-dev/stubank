@@ -222,7 +222,7 @@ class CreateAccountForm extends Component {
                 <input
                   type="submit"
                   value="Signup"
-                  className="form-control btn-success btn-sm"
+                  className="form-control btn-info btn-sm"
                 ></input>
               </div>
               <div className="col-8 text-right">
