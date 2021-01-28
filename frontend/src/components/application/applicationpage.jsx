@@ -119,10 +119,14 @@ class ApplicationPage extends Component {
   }
 
   getPayees(callback) {
+const config = { headers: {
+  "x-auth-token": this.JWTToken
+}}
+
     const payeesList = axios
-      .get("/api/payees", {
-        headers: { "x-auth-token": this.JWTToken },
-      })
+      .get("/api/payees", config
+
+      )
       .then((data) => {
         callback(undefined, data);
       })
@@ -133,31 +137,33 @@ class ApplicationPage extends Component {
   }
 
   addPayee(payeeEmail, callback) {
+    const config = { headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": this.JWTToken
+    }
+  }
+    const body = {
+      "email": payeeEmail 
+    }
+    
     const addPayeeReq = axios
-      .post("/api/payees", {
-        headers: {
-          "content-type": "application/json",
-          "x-auth-token": this.JWTToken,
-        },
-        body: { email: payeeEmail },
-      })
+      .put("/api/payees",body, config)
       .then((data) => {
         callback(undefined, data);
       })
       .catch((error) => {
+        console.log(error);
         callback(error, undefined);
       });
   }
 
   deletePayee(payeeID, callback) {
-    const addPayeeReq = axios
-      .post("/api/payees", {
-        headers: {
-          "content-type": "application/json",
-          "x-auth-token": this.JWTToken,
-        },
-        body: { id: payeeID },
-      })
+    console.log(this.JWTToken);
+    
+    const deletePayee = axios.delete("/api/payees", {headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": this.JWTToken
+    }, data: {"id": payeeID}})
       .then((data) => {
         callback(undefined, data);
       })
@@ -167,18 +173,21 @@ class ApplicationPage extends Component {
   }
 
   changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
+    console.log(this.JWTToken);
+
+    const config = { headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": this.JWTToken
+    }
+  }
+    const body = {
+      "newPassword": inputNewPassword,
+      "password": currentPassword,
+      "password2": confirmPassword,
+    }
+    
     const changePassword = axios
-      .post("/api/users/password", {
-        headers: {
-          "x-auth-token": this.JWTToken,
-          "content-type": "application/json",
-        },
-        body: {
-          newPassword: inputNewPassword,
-          password: currentPassword,
-          password2: confirmPassword,
-        },
-      })
+      .post("/api/users/password", body, config)
       .then(() => {
         callback(undefined);
       })

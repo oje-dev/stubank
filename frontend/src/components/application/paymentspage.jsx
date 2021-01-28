@@ -140,7 +140,8 @@ class PaymentsPage extends Component {
                             className="formControl"
                             id="amount"
                             type="number"
-                            min="1"
+                            min="0.00"
+                            step="0.01"
                             max={this.state.currentBalance}
                             required={true}
                             style={{ marginLeft: "1em" }}

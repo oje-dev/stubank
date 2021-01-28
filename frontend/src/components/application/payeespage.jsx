@@ -54,7 +54,7 @@ class PayeesPage extends Component {
           `A user with email address: ${this.state.addPayee} does not exist.`
         );
       }
-      alert("Payee Removed Successfully");
+      alert("Payee Added Successfully");
       this.getPayees();
     });
   }

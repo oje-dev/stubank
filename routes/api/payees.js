@@ -27,12 +27,18 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
 
   try {
     const newPayee = await User.findOne({ emailHashed }).select("id");
+    console.log(newPayee);
 
     const user = await User.findById(req.user.id);
+    console.log(user);
 
     // Check if payee is already saved
     if (user.payees.includes(newPayee.toString())) {
       return res.json({ msg: "Payee already saved" });
+    }
+
+    if (newPayee === req.user.id) {
+      return res.json({ msg: "Cant add yourself as payee" });
     }
 
     user.payees.push(newPayee);
@@ -60,22 +66,23 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/payees/:id
+// @route   DELETE api/payees/
 // @desc    Delete a saved payee
 // @access  Private
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/", auth, async (req, res) => {
   try {
+    console.log(req.body.id);
     const user = await User.findById(req.user.id);
 
     // Check if payee exists in users saved payees
-    if (!user.payees.toString().includes(req.params.id)) {
+    if (!user.payees.toString().includes(req.body.id)) {
       return res.json({ msg: "Payee is not saved" });
     }
 
     // Get remove index
     const removeIndex = user.payees
       .map((payee) => payee.id.toString())
-      .indexOf(req.params.id);
+      .indexOf(req.body.id);
 
     user.payees.splice(removeIndex, 1);
 
