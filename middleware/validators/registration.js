@@ -19,7 +19,7 @@ module.exports = {
     .trim()
     .isMobilePhone(),
 
-  requireDOB: check(),
+  requireDOB: check().isDate().isBefore(getDate()),
 
   requireUni: check("uni", "University is required").trim().not().isEmpty(),
 
@@ -74,3 +74,9 @@ module.exports = {
       }
     }),
 };
+
+function getDate() {
+  let d = new Date();
+  d.setDate(d.getDate() - 6570);
+  return d.toDateString();
+}
