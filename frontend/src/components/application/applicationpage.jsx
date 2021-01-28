@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import OverviewPage from "./overview-page.jsx";
-import SpendingPage from "./spendingpage.jsx";
 import PaymentsPage from "./paymentspage.jsx";
 import AccountPage from "./accountpage.jsx";
 import InvalidAuth from "./invalidauth.jsx";
@@ -15,7 +14,6 @@ class ApplicationPage extends Component {
     this.JWTToken = sessionStorage.getItem("x-auth-token");
 
     this.onOverview = this.onOverview.bind(this);
-    this.onSpending = this.onSpending.bind(this);
     this.onPayments = this.onPayments.bind(this);
     this.onAccount = this.onAccount.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
@@ -147,12 +145,6 @@ class ApplicationPage extends Component {
     });
   }
 
-  onSpending() {
-    this.setState(() => {
-      return { current_page: <SpendingPage /> };
-    });
-  }
-
   onPayments() {
     this.setState(() => {
       return { current_page: <PaymentsPage /> };
@@ -162,7 +154,7 @@ class ApplicationPage extends Component {
   onAccount() {
     this.setState(() => {
       return {
-        current_page: <AccountPage userInfo={this.getUserInfo} />,
+        current_page: <AccountPage getUserInfo={this.getUserInfo} />,
       };
     });
   }

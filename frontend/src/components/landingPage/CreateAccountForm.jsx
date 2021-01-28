@@ -18,6 +18,9 @@ class CreateAccountForm extends Component {
     this.handleChangePostCode = this.handleChangePostCode.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
+    this.handleChangeConfirmPassword = this.handleChangeConfirmPassword.bind(
+      this
+    );
 
     this.onSubmit = this.onSubmit.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
@@ -130,27 +133,13 @@ class CreateAccountForm extends Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col">
-                <label htmlFor="address_1">Address 1*</label>
+                <label htmlFor="address">Address*</label>
                 <input
-                  id="address_1"
+                  id="address"
                   type="text"
                   required={true}
-                  placeholder="Line 1"
+                  placeholder="Your Address"
                   className="form-control form-control-sm"
-                  onChange={this.handleChangeAddress}
-                ></input>
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <div className="form-row">
-              <div className="col">
-                <label htmlFor="address_2">Address 2</label>
-                <input
-                  id="address_2"
-                  type="text"
-                  className="form-control form-control-sm"
-                  placeholder="Line 2"
                   onChange={this.handleChangeAddress}
                 ></input>
               </div>
@@ -220,7 +209,7 @@ class CreateAccountForm extends Component {
                   required={true}
                   className="form-control form-control-sm"
                   placeholder="•••••••••••"
-                  onChange={this.handleChangePassword}
+                  onChange={this.handleChangeConfirmPassword}
                 ></input>
               </div>
             </div>
@@ -313,12 +302,19 @@ class CreateAccountForm extends Component {
   handleChangePassword(event) {
     this.setState({
       password: event.target.value,
-      password2: event.target.value,
     });
+  }
+
+  handleChangeConfirmPassword(event) {
+    this.setState({ password2: event.target.value });
   }
 
   onSubmit(event) {
     event.preventDefault();
+    if (this.state.password !== this.state.password2) {
+      return alert("Passwords do not match");
+    }
+
     this.sendRequest((error, data) => {
       if (error) {
         let errorMessage = "";

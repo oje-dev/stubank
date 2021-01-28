@@ -51,18 +51,7 @@ class AppNavbar extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link onClick={this.onOverview}>Overview</Nav.Link>
-            <NavDropdown title="Payments" id="collasible-nav-dropdown">
-              <NavDropdown.Item onClick={this.onPayments}>
-                Send a Payment
-              </NavDropdown.Item>
-              <NavDropdown.Item onClick={this.onPayments}>
-                Request a Payment
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={this.onPayments}>
-                View Payments
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link onClick={this.onPayments}>Payments</Nav.Link>
           </Nav>
           <Nav>
             <NavDropdown title="Account Details" id="collasible-nav-dropdown">

@@ -133,7 +133,7 @@ router.get("/", auth, async (req, res) => {
     });
 
     if (!transactions) {
-      return res.json({ msg: "No transactions made" });
+      return res.sendStatus(400).json({ msg: "No transactions made" });
     }
 
     res.json(transactions);
@@ -148,8 +148,8 @@ router.get("/", auth, async (req, res) => {
 // @access Private
 router.get("/predict", auth, async (req, res) => {
   const transactions = await Transaction.find({ userId: req.user.id });
-  if (!transactions) {
-    return res.status(404).send("No transactions found");
+  if (transactions.length === 0) {
+    return res.send("0");
   }
   const stringifiedTransaction = JSON.stringify(transactions);
   client.req(
