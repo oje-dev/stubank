@@ -55,6 +55,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  accountId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },
   payees: [
     {
       user: {

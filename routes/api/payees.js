@@ -26,7 +26,7 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
   ).toString();
 
   try {
-    const newPayee = await User.findOne({ emailHashed }).select("id");
+    const newPayee = await User.findOne({ emailHashed }).select("accountId");
     console.log(newPayee);
 
     const user = await User.findById(req.user.id);

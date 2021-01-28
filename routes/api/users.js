@@ -112,9 +112,6 @@ router.post(
       // Create DB instance
       user = new User(encryptedData);
 
-      // Saves to db
-      await user.save();
-
       const newAccount = {};
       newAccount.userId = user.id;
       newAccount.cardNumber = encryptionTool.encryptMessage(
@@ -128,6 +125,10 @@ router.post(
 
       account = new Account(newAccount);
 
+      user.accountId = account.id;
+
+      // Saves to db
+      await user.save();
       await account.save();
 
       // Change to how front end wants it

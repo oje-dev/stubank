@@ -197,6 +197,17 @@ const config = { headers: {
   }
 
   sendPayment(sentFrom, sentTo, amount, recipientName, callback) {
+    const config = { headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": this.JWTToken
+    }
+  }
+    const body = {
+      "sentFrom": sentFrom,
+      "sentTo": sentTo,
+      "Amount": amount,
+    }
+    
     const sendPayment = axios
       .post("/api/transactions", {
         headers: {
