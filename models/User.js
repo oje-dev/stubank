@@ -61,9 +61,15 @@ const UserSchema = new mongoose.Schema({
   },
   payees: [
     {
-      user: {
+      payeeID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "accounts",
+      },
+      payeeName: {
+        Type: String,
+      },
+      payeeEmail: {
+        type: String,
       },
     },
   ],

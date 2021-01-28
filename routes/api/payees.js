@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const config = require("config");
 
+const encryptionTool = require("../../utils/encryptiontool");
 const auth = require("../../middleware/auth");
 const User = require("../../models/User");
 
@@ -27,21 +28,37 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
 
   try {
     const newPayee = await User.findOne({ emailHashed }).select("accountId");
-    console.log(newPayee);
 
     const user = await User.findById(req.user.id);
-    console.log(user);
-
-    // Check if payee is already saved
-    if (user.payees.includes(newPayee.toString())) {
-      return res.json({ msg: "Payee already saved" });
-    }
 
     if (newPayee === req.user.id) {
       return res.json({ msg: "Cant add yourself as payee" });
     }
 
-    user.payees.push(newPayee);
+    let name = await User.findOne({ accountId: newPayee.accountId }).select(
+      "lastname"
+    );
+
+    name = encryptionTool.decryptMessage(
+      "keys/privatekey.pem",
+      config.get("passphrase"),
+      name.lastname
+    );
+
+    newPayeeObj = {};
+    newPayeeObj.payeeID = newPayee.accountId;
+    newPayeeObj.payeeEmail = email;
+    newPayeeObj.payeeName = name;
+
+    console.log(newPayeeObj);
+    console.log(user.payees);
+
+    // Check if payee is already saved
+    if (user.payees.includes(newPayeeObj)) {
+      return res.json({ msg: "Payee already saved" });
+    }
+
+    user.payees.push(newPayeeObj);
 
     await user.save();
 
@@ -71,7 +88,6 @@ router.get("/", auth, async (req, res) => {
 // @access  Private
 router.delete("/", auth, async (req, res) => {
   try {
-    console.log(req.body.id);
     const user = await User.findById(req.user.id);
 
     // Check if payee exists in users saved payees

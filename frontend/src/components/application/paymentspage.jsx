@@ -67,7 +67,7 @@ class PaymentsPage extends Component {
   onSubmitPayment(event) {
     event.preventDefault();
     this.props.sendPayment(
-      "100" /* I don't know how to get sent from ID */,
+      this.state.accountId /* I don't know how to get sent from ID */,
       this.state.recipientID,
       this.state.currentBalanceamount,
       this.state.recipientName,

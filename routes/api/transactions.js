@@ -86,37 +86,44 @@ router.post("/", auth, async (req, res) => {
 
     await recipient.updateOne({ $set: updateReciever }, { new: true });
 
+    transaction = new Transaction(transactionFields);
+    // Save to DB
+    await transaction.save();
+    await account.save();
+    await recipient.save();
+    res.json(transaction);
+
     // Checks for fraud
-    const transactions = await Transaction.find({
-      userId: req.user.id,
-      sentTo,
-    }).select("amount");
-    transactions.push({ _id: 0, amount: amount });
-    const stringifiedTransactions = JSON.stringify(transactions);
-    // returns isAnomalous, true is an anomaly, false is a 'real' transaction
-    client.req(
-      stringifiedTransactions,
-      "ws://0.0.0.0:5007/",
-      async (isAnomalous) => {
-        if (isAnomalous === "True") {
-          //send a 2FA request
-          const email = await User.findById(req.user.id).select("email");
-          const emailDecrypted = encryptionTool.decryptMessage(
-            "/keys/privatekey.pem",
-            config.get("passphrase"),
-            email.email
-          );
-          otp.gentoken(req.user.id, emailDecrypted);
-        } else {
-          transaction = new Transaction(transactionFields);
-          // Save to DB
-          await transaction.save();
-          await account.save();
-          await recipient.save();
-          res.json(transaction);
-        }
-      }
-    );
+    // const transactions = await Transaction.find({
+    //   userId: req.user.id,
+    //   sentTo,
+    // }).select("amount");
+    // transactions.push({ _id: 0, amount: amount });
+    // const stringifiedTransactions = JSON.stringify(transactions);
+    // // returns isAnomalous, true is an anomaly, false is a 'real' transaction
+    // client.req(
+    //   stringifiedTransactions,
+    //   "ws://0.0.0.0:5007/",
+    //   async (isAnomalous) => {
+    //     if (isAnomalous === "True") {
+    //       //send a 2FA request
+    //       const email = await User.findById(req.user.id).select("email");
+    //       const emailDecrypted = encryptionTool.decryptMessage(
+    //         "/keys/privatekey.pem",
+    //         config.get("passphrase"),
+    //         email.email
+    //       );
+    //       otp.gentoken(req.user.id, emailDecrypted);
+    //     } else {
+    //       transaction = new Transaction(transactionFields);
+    //       // Save to DB
+    //       await transaction.save();
+    //       await account.save();
+    //       await recipient.save();
+    //       res.json(transaction);
+    //     }
+    //   }
+    // );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

@@ -26,6 +26,8 @@ class ApplicationPage extends Component {
     this.getPayees = this.getPayees.bind(this);
     this.addPayee = this.addPayee.bind(this);
     this.deletePayee = this.deletePayee.bind(this);
+    this.sendPayment = this.sendPayment.bind(this);
+    this.changePassword = this.changePassword.bind(this);
 
     this.state = {
       current_page: (
@@ -137,6 +139,7 @@ const config = { headers: {
   }
 
   addPayee(payeeEmail, callback) {
+    console.log(this.JWTToken);
     const config = { headers: {
       "Content-Type": "application/json",
       "x-auth-token": this.JWTToken
@@ -197,6 +200,8 @@ const config = { headers: {
   }
 
   sendPayment(sentFrom, sentTo, amount, recipientName, callback) {
+    console.log(this.JWTToken);
+    
     const config = { headers: {
       "Content-Type": "application/json",
       "x-auth-token": this.JWTToken
@@ -209,13 +214,7 @@ const config = { headers: {
     }
     
     const sendPayment = axios
-      .post("/api/transactions", {
-        headers: {
-          "content-type": "application/json",
-          "x-auth-token": this.JWTToken,
-        },
-        body: { sentFrom, sentTo, amount, recipientName },
-      })
+      .post("/api/transactions", body, config)
       .then(() => {
         callback(undefined);
       })

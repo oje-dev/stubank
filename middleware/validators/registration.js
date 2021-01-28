@@ -19,7 +19,7 @@ module.exports = {
     .trim()
     .isMobilePhone(),
 
-  requireDOB: check().isDate().isBefore(getDate()),
+  requireDOB: check(),
 
   requireUni: check("uni", "University is required").trim().not().isEmpty(),
 
