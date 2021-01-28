@@ -8,7 +8,6 @@ const User = require("../../models/User");
 module.exports = {
   requireEmailExists: check("email", "Please include a valid email")
     .trim()
-    .normalizeEmail()
     .isEmail()
     .custom(async (email) => {
       const emailHashed = (

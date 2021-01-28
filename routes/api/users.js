@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
+const { validationResult, header } = require("express-validator");
 const config = require("config");
 const otp = require("../../utils/totp");
 const { requireValidPassword } = require("../../middleware/validators/login");
@@ -213,28 +213,20 @@ router.post(
 
     let user = await User.findById(req.user.id);
 
-    let password = req.body;
+    let { newPassword } = req.body;
 
     try {
       // Creates salt with 10 rounds, more rounds = more secure but slower to execute
       const salt = await bcrypt.genSalt(10);
       // Hashes password
-      password = await bcrypt.hash(password, salt);
+      newPassword = await bcrypt.hash(newPassword, salt);
 
-      let encryptedData = {};
-
-      // Encrypts data
-      encryptedData.password = encryptionTool.encryptMessage(
+      user.password = encryptionTool.encryptMessage(
         "keys/publickey.pem",
-        password
+        newPassword
       );
 
-      user = await User.findOneAndUpdate(
-        { id: req.user.id },
-        { $set: encryptedData },
-        { new: true }
-      );
-
+      await user.save();
       return res.json(user);
     } catch (err) {
       console.error(err.message);

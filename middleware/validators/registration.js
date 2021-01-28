@@ -43,7 +43,6 @@ module.exports = {
 
   requireEmail: check("email", "Must be a valid email")
     .trim()
-    .normalizeEmail()
     .isEmail()
     .custom(async (email) => {
       const emailHashed = (
