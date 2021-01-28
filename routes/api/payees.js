@@ -92,13 +92,21 @@ router.delete("/", auth, async (req, res) => {
 
     // Check if payee exists in users saved payees
     if (!user.payees.toString().includes(req.body.id)) {
-      return res.json({ msg: "Payee is not saved" });
+      return res.status(401).json({ msg: "Payee is not saved" });
     }
 
+    console.log(req.body.id, "\n");
+
     // Get remove index
-    const removeIndex = user.payees
-      .map((payee) => payee.id.toString())
-      .indexOf(req.body.id);
+
+    const removePayeeList = user.payees.map((payee) => {
+      payee.payeeID.toString();
+      console.log(payee.payeeID);
+    });
+
+    const removeIndex = removePayeeList.indexOf(req.body.id.toString());
+
+    console.log("\n", removeIndex);
 
     user.payees.splice(removeIndex, 1);
 

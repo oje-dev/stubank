@@ -36,6 +36,7 @@ router.get("/", auth, async (req, res) => {
       city: decryptField(user.city),
       postcode: decryptField(user.postcode),
       email: decryptField(user.email),
+      userId: user.accountId,
     };
 
     res.send(decryptedData);

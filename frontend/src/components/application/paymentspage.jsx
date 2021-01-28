@@ -13,7 +13,7 @@ class PaymentsPage extends Component {
     this.state = {
       payeesList: [],
       recipientID: "",
-      recipientName: "",
+      recipientEmail: "",
       currentBalance: 0,
       amount: 0,
     };
@@ -39,7 +39,6 @@ class PaymentsPage extends Component {
         return this.setState({
           payeesList: [
             {
-              payeeName: "AuthError",
               payeeID: "AuthError",
               payeeEmail: "AuthError",
             },
@@ -50,14 +49,14 @@ class PaymentsPage extends Component {
       this.setState({ payeesList: data.data.payees });
       if (data.data.payees.length !== 0) {
         this.setState({ recipientID: data.data.payees[0].payeeID });
-        this.setState({ recipientName: data.data.payees[0].payeeName });
+        this.setState({ recipientEmail: data.data.payees[0].payeeEmail });
       }
     });
   }
 
   onChangeRecipient(event) {
     this.setState({ recipientID: event.target.value.split("-")[0] });
-    this.setState({ recipientName: event.target.value.split("-")[1] });
+    this.setState({ recipientEmail: event.target.value.split("-")[1] });
   }
 
   onChangeAmount(event) {
@@ -70,10 +69,9 @@ class PaymentsPage extends Component {
       this.state.accountId /* I don't know how to get sent from ID */,
       this.state.recipientID,
       this.state.currentBalanceamount,
-      this.state.recipientName,
       (error) => {
         if (error) {
-          return alert("Details incorrect.\nPayment Failed");
+          return alert("Payment Failed");
         }
         alert(
           `Payment to acccount ${this.state.recipientID} sent successfully.`
@@ -122,9 +120,9 @@ class PaymentsPage extends Component {
                               return (
                                 <option
                                   key={index}
-                                  value={payee.payeeID + "-" + payee.payeeName}
+                                  value={payee.payeeID + "-" + payee.payeeEmail}
                                 >
-                                  {payee.payeeName + " " + payee.payeeID}
+                                  {payee.payeeEmail + " " + payee.payeeID}
                                 </option>
                               );
                             })}
