@@ -70,7 +70,7 @@ module.exports = {
     .trim()
     .isLength({ min: 4, max: 20 })
     .custom(async (password2, { req }) => {
-      if (password2 !== req.body.password) {
+      if (password2 !== req.body.newPassword) {
         throw new Error("Passwords must match");
       }
     }),

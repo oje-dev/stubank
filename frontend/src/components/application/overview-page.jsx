@@ -3,6 +3,9 @@ import TransactionList from "./transaction-list.jsx";
 import TransfersList from "./transfers-list.jsx";
 import SpendingBar from "./spendingbar.jsx";
 import DigitalCard from "./digital-card.jsx";
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Button from "react-bootstrap/Button";
 
 class OverviewPage extends Component {
   constructor(props) {
@@ -84,9 +87,33 @@ class OverviewPage extends Component {
               <br />
               <div className="row justify-content-center">
                 <div className="col-10 col-sm-6 col-md-4 col-lg-2">
-                  <span className="current-balance-title">
-                    Predicted Spending
-                  </span>
+                  <span className="current-balance-title">Predicted Spend</span>
+                  <OverlayTrigger
+                    trigger={["hover", "focus"]}
+                    placement="top"
+                    overlay={
+                      <Popover id="popover-positioned-top">
+                        <Popover.Title as="h3">
+                          What is your predicted spend?
+                        </Popover.Title>
+                        <Popover.Content>
+                          We use machine learning to predict the likelihood that
+                          you will run out of money by the end of the month. Our
+                          algorithm learns from your transaction history and
+                          will become more accurate as you use your
+                          <strong> Stubank©</strong> account.
+                        </Popover.Content>
+                      </Popover>
+                    }
+                  >
+                    <Button
+                      className="btn-sm"
+                      variant="info"
+                      style={{ marginLeft: "0.5em" }}
+                    >
+                      ?
+                    </Button>
+                  </OverlayTrigger>
                   <SpendingBar
                     currentBalance={this.state.current_balance}
                     getCurrentBalance={this.props.getCurrentBalance}
@@ -98,16 +125,12 @@ class OverviewPage extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-6">
-            <p className="recent-payment-header">Recent Transactions</p>
+          <div className="col">
+            <p className="recent-payment-header">Transactions History</p>
             <TransactionList
               getTransactions={this.props.getTransactions}
               currencyFormatter={this.formatCurrency}
             />
-          </div>
-          <div className="col-md-6">
-            <p className="recent-payment-header">Recent Transfers</p>
-            <TransfersList />
           </div>
         </div>
       </div>

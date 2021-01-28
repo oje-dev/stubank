@@ -311,6 +311,7 @@ class CreateAccountForm extends Component {
 
   onSubmit(event) {
     event.preventDefault();
+    console.log(this.state);
     if (this.state.newPassword !== this.state.password2) {
       return alert("Passwords do not match");
     }

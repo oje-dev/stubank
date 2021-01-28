@@ -69,7 +69,7 @@ router.post(
       city,
       postcode,
       email,
-      password,
+      newPassword,
     } = req.body;
 
     try {
@@ -85,13 +85,13 @@ router.post(
         city,
         postcode,
         email,
-        password,
+        password: newPassword,
       };
 
       // Creates salt with 10 rounds, more rounds = more secure but slower to execute
       const salt = await bcrypt.genSalt(10);
       // Hashes password
-      data.password = await bcrypt.hash(password, salt);
+      data.password = await bcrypt.hash(newPassword, salt);
 
       let encryptedData = {};
 
