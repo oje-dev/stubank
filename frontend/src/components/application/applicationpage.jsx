@@ -139,7 +139,6 @@ class ApplicationPage extends Component {
   }
 
   addPayee(payeeEmail, callback) {
-    console.log(this.JWTToken);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -162,7 +161,6 @@ class ApplicationPage extends Component {
   }
 
   deletePayee(payeeID, callback) {
-    console.log(this.JWTToken);
 
     const deletePayee = axios
       .delete("/api/payees", {
@@ -187,11 +185,6 @@ class ApplicationPage extends Component {
     email,
     callback
   ) {
-    console.log(this.JWTToken);
-    console.log(currentPassword);
-    console.log(inputNewPassword);
-    console.log(confirmPassword);
-    console.log(email);
 
     const config = {
       headers: {

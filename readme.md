@@ -7,3 +7,5 @@ Requirements: python 3.8, NodeJS
    python machinelearning/fraud/fraudserver.py
    python machinelearning/predict/predictserver.py
 5. Run the nodeJS server using npm run server
+6. all documents are in the docs folder.
+

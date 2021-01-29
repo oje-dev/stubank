@@ -53,7 +53,7 @@ router.post(
     // Checks for errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     // Destructure request data
@@ -132,7 +132,6 @@ router.post(
       await account.save();
 
       // Change to how front end wants it
-      //console.log(account);
 
       otp.gentoken(user.id, req.body.email);
 

@@ -34,7 +34,6 @@ async function addMoney(id, amount) {
     account.currentBalance = amount;
 
     await account.save();
-    console.log(account);
     return "Success!";
   } catch (error) {
     console.log(error);
