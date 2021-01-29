@@ -9,6 +9,7 @@ class PaymentsPage extends Component {
     this.onSubmitPayment = this.onSubmitPayment.bind(this);
     this.onChangeRecipient = this.onChangeRecipient.bind(this);
     this.onChangeAmount = this.onChangeAmount.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
 
     this.state = {
       payeesList: [],
@@ -16,12 +17,14 @@ class PaymentsPage extends Component {
       recipientEmail: "",
       currentBalance: 0,
       amount: 0,
+      user_info: ""
     };
   }
 
   componentDidMount() {
     this.getCurrentBalance();
     this.getPayees();
+    this.getUserInfo();
   }
 
   getCurrentBalance() {
@@ -30,6 +33,17 @@ class PaymentsPage extends Component {
         return this.setState({ currentBalance: 0 });
       }
       this.setState({ currentBalance: data.data.balance });
+    });
+  }
+
+  getUserInfo() {
+    this.props.getUserInfo((error, data) => {
+      if (error) {
+        return this.setState({
+          user_info: { title: "AuthError", firstname: "AuthError" },
+        });
+      }
+      this.setState({ user_info: data.data });
     });
   }
 
@@ -54,6 +68,8 @@ class PaymentsPage extends Component {
     });
   }
 
+
+
   onChangeRecipient(event) {
     this.setState({ recipientID: event.target.value.split("-")[0] });
     this.setState({ recipientEmail: event.target.value.split("-")[1] });
@@ -66,9 +82,9 @@ class PaymentsPage extends Component {
   onSubmitPayment(event) {
     event.preventDefault();
     this.props.sendPayment(
-      this.state.accountId /* I don't know how to get sent from ID */,
+      this.state.user_info.userId,
       this.state.recipientID,
-      this.state.currentBalanceamount,
+      this.state.amount,
       (error) => {
         if (error) {
           return alert("Payment Failed");

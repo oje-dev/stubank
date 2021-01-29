@@ -215,7 +215,7 @@ class ApplicationPage extends Component {
     const body = {
       sentFrom: sentFrom,
       sentTo: sentTo,
-      Amount: amount,
+      amount: amount,
     };
 
     const sendPayment = axios
@@ -256,6 +256,7 @@ class ApplicationPage extends Component {
             currencyFormatter={this.formatCurrency}
             getPayees={this.getPayees}
             sendPayment={this.sendPayment}
+            getUserInfo={this.getUserInfo}
           />
         ),
       };

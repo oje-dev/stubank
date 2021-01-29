@@ -46,7 +46,7 @@ class PayeesPage extends Component {
     this.props.addPayee(this.state.addPayee, (error) => {
       if (error) {
         return alert(
-          `A user with email address: ${this.state.addPayee} does not exist.`
+          `The user with email address "${this.state.addPayee}" Either does not exist, is yourself or is already one of your payees.`
         );
       }
       alert("Payee Added Successfully");
@@ -63,7 +63,7 @@ class PayeesPage extends Component {
     this.props.deletePayee(this.state.deletePayee, (error) => {
       if (error) {
         return alert(
-          `A user with ID: ${this.state.deletePayee} does not exist.`
+          `You have no payees with id "${this.state.deletePayee}"`
         );
       }
       alert("Payee Deleted Successfully");

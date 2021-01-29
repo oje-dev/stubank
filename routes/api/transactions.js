@@ -17,8 +17,8 @@ const router = express.Router();
 // @access  Private
 router.post("/", auth, async (req, res) => {
   // Destructure request
+  console.log(req.body);
   const { sentFrom, sentTo, amount, recipientName } = req.body;
-
   // Build transaction object
   const transactionFields = {};
   transactionFields.userId = req.user.id;
