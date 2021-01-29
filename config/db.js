@@ -3,6 +3,7 @@ const config = require("config");
 const { connect } = require("../routes/api/users");
 const db = config.get("mongoURI");
 
+// Connects to mongoDB database
 const connectDB = async () => {
   try {
     await mongoose.connect(db, {

@@ -21,6 +21,7 @@ router.post(
   "/",
   [requireEmailExists, requireValidPassword],
   async (req, res) => {
+    // Checks for errors from validation middleware
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -33,8 +34,10 @@ router.post(
 
       let user = await User.findOne({ emailHashed });
 
+      // Sends otp email
       otp.gentoken(user.id, req.body.email);
 
+      // Returns id used to verify otp
       res.send(user.id);
     } catch (err) {
       console.error(err.message);
@@ -43,7 +46,11 @@ router.post(
   }
 );
 
+// @route   POST api/auth/otp
+// @desc    Verify otp and retuen jwt
+// @access  Public
 router.post("/otp", async (req, res) => {
+  // Checks otp
   if (otp.checktoken(req.body.otp, req.body.userID)) {
     // Return jsonwebtoken
     const payload = {
@@ -55,7 +62,8 @@ router.post("/otp", async (req, res) => {
     jwt.sign(
       payload,
       config.get("jwtSecret"),
-      { expiresIn: 360000 },
+      // Expires after 30 min
+      { expiresIn: 1800 },
       (err, token) => {
         if (err) throw err;
         res.json({ token });

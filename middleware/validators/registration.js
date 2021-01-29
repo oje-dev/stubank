@@ -19,7 +19,7 @@ module.exports = {
     .trim()
     .isMobilePhone(),
 
-  requireDOB: check(),
+  requireDOB: check("dob", "You must be 18 to register.").isBefore(getDate()),
 
   requireUni: check("uni", "University is required").trim().not().isEmpty(),
 
@@ -41,6 +41,7 @@ module.exports = {
     .not()
     .isEmpty(),
 
+  // Checks for email already in use
   requireEmail: check("email", "Must be a valid email")
     .trim()
     .isEmail()
@@ -62,6 +63,7 @@ module.exports = {
     .trim()
     .isLength({ min: 6, max: 20 }),
 
+  // Checks if passwords match
   requirePasswordConfirmation: check(
     "password2",
     "Password must be between 6 and 20 characters"
@@ -75,6 +77,7 @@ module.exports = {
     }),
 };
 
+// Gets date 18yr ago from today
 function getDate() {
   let d = new Date();
   d.setDate(d.getDate() - 6570);

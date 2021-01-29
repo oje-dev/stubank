@@ -18,6 +18,7 @@ const router = express.Router();
 router.post("/", auth, async (req, res) => {
   // Destructure request
   const { sentFrom, sentTo, amount, recipientName } = req.body;
+
   // Build transaction object
   const transactionFields = {};
   transactionFields.userId = req.user.id;
@@ -75,6 +76,7 @@ router.post("/", auth, async (req, res) => {
         .json({ msg: "Cannot send to and from the same account" });
     }
 
+    // Update balances
     const updateSender = {};
     updateSender.currentBalance = account.currentBalance - parseFloat(amount);
 
@@ -94,13 +96,13 @@ router.post("/", auth, async (req, res) => {
     transactions.push({ _id: 0, amount: amount });
     const stringifiedTransactions = JSON.stringify(transactions);
     transaction = new Transaction(transactionFields);
-    // returns isAnomalous, true is an anomaly, false is a 'real' transaction
+    // Returns isAnomalous, true is an anomaly, false is a 'real' transaction
     client.req(
       stringifiedTransactions,
       "ws://0.0.0.0:5007/",
       async (isAnomalous) => {
         if (isAnomalous === "True") {
-          //send a 2FA request
+          //Send a 2FA request
           const email = await User.findById(req.user.id).select("email");
           const emailDecrypted = encryptionTool.decryptMessage(
             "/keys/privatekey.pem",
@@ -134,6 +136,7 @@ router.post("/", auth, async (req, res) => {
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {
+    // Gets transactions and sorts most recent first
     const transactions = await Transaction.find({ userId: req.user.id }).sort({
       date: -1,
     });
@@ -153,6 +156,7 @@ router.get("/", auth, async (req, res) => {
 // @desc Predict future spending
 // @access Private
 router.get("/predict", auth, async (req, res) => {
+  // Gets
   const transactions = await Transaction.find({ userId: req.user.id });
   if (transactions.length === 0) {
     return res.send("0");
@@ -167,20 +171,22 @@ router.get("/predict", auth, async (req, res) => {
   );
 });
 
+// @route   api/transactions/otp
+// @desc    Verifys otp and saves transaction info to db
+// @access  Public
 router.post("/otp", async (req, res) => {
+  // Checks otp
   if (otp.checktoken(req.body.data.otp, req.body.data.userId)) {
-    // let account = await Account.findById(transaction.sentFrom);
-    // let recipient = await Account.findById(transaction.sentTo);
-    // await account.updateOne({ $set: updateSender }, { new: true });
-
-    // await recipient.updateOne({ $set: updateReciever }, { new: true });
-    let transaction=new Transaction(req.body.data.transaction);
+    // Gets info from request
+    let transaction = new Transaction(req.body.data.transaction);
     let account = await Account.findById(req.body.data.transaction.sentFrom);
     let recipient = await Account.findById(req.body.data.transaction.sentTo);
 
-    await account.updateOne({$set: req.body.data.account}, { new: true });
+    // Updates accounts
+    await account.updateOne({ $set: req.body.data.account }, { new: true });
     await recipient.updateOne({ $set: req.body.data.recipient }, { new: true });
 
+    // Saves to db
     await transaction.save();
     await account.save();
     await recipient.save();

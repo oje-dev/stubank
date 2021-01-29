@@ -8,8 +8,12 @@ const User = require("../../models/User");
 
 const router = express.Router();
 
+// @route   api/application
+// @desc    Gets the current users info
+// @access  Private
 router.get("/", auth, async (req, res) => {
   try {
+    // Finds user
     const user = await User.findById(req.user.id);
 
     if (!user) {
@@ -24,6 +28,7 @@ router.get("/", auth, async (req, res) => {
       );
     };
 
+    // Decrypts required data
     let decryptedData = {
       title: decryptField(user.title),
       firstname: decryptField(user.firstname),

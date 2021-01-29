@@ -42,15 +42,17 @@ router.post("/", auth, async (req, res) => {
 });
 
 // @route   GET api/account
-// @desc    Get the current users accounts
+// @desc    Get the current users account
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {
+    // Finds account
     const account = await Account.findOne({
       userId: req.user.id,
       savingsAccount: false,
     });
 
+    // Decrypts card details
     account.cardNumber = encryptionTool.decryptMessage(
       "keys/privatekey.pem",
       config.get("passphrase"),
@@ -62,6 +64,7 @@ router.get("/", auth, async (req, res) => {
       account.accountNumber
     );
 
+    // Returns account to front-end
     res.json(account);
   } catch (err) {
     console.error(err.message);
@@ -129,8 +132,8 @@ router.post("/freeze/:id", auth, async (req, res) => {
   }
 });
 
-// @route   POST api/account
-// @desc    Create an account
+// @route   GET api/account/balance
+// @desc    Gets the current users account balance
 // @access  Private
 router.get("/balance", auth, async (req, res) => {
   const account = await Account.findOne({

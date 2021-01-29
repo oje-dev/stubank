@@ -30,7 +30,7 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
     const newPayee = await User.findOne({ emailHashed }).select("accountId");
 
     const user = await User.findById(req.user.id);
-    
+
     if (newPayee["id"] === req.user.id) {
       return res.status(400).send("Your cannot add yourself as a payee");
     }
@@ -45,6 +45,7 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
       name.lastname
     );
 
+    // Build new payee object
     newPayeeObj = {};
     newPayeeObj.payeeID = newPayee.accountId;
     newPayeeObj.payeeEmail = email;
@@ -54,8 +55,10 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
     if (user.payees.toString().includes(newPayeeObj.payeeID)) {
       return res.status(400).send("Your cannot add yourself as a payee");
     }
+    // Push to payee array
     user.payees.push(newPayeeObj);
 
+    // Save to db
     await user.save();
 
     res.json("Payee saved");
@@ -92,17 +95,14 @@ router.delete("/", auth, async (req, res) => {
     }
 
     // Get remove index
-    let i=0;
-    let removeIndex =-1;
-    for(i in user.payees) {
-      if (user.payees[i]["payeeID"].toString()===req.body.id){
-        removeIndex=i;
+    let i = 0;
+    let removeIndex = -1;
+    for (i in user.payees) {
+      if (user.payees[i]["payeeID"].toString() === req.body.id) {
+        removeIndex = i;
       }
     }
-    
-    // const removePayeeList = await user.payees.map((payee) => {
-    //   payee.payeeID.toString();
-    // });
+
     user.payees.splice(removeIndex, 1);
 
     await user.save();
