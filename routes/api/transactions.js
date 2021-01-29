@@ -76,16 +76,15 @@ router.post("/", auth, async (req, res) => {
     }
 
     const updateSender = {};
-    updateSender.currentBalance = account.currentBalance -parseFloat(amount);
+    updateSender.currentBalance = account.currentBalance - parseFloat(amount);
 
     const updateReciever = {};
-    updateReciever.currentBalance = recipient.currentBalance + parseFloat(amount);
+    updateReciever.currentBalance =
+      recipient.currentBalance + parseFloat(amount);
 
     await account.updateOne({ $set: updateSender }, { new: true });
 
     await recipient.updateOne({ $set: updateReciever }, { new: true });
-
- 
 
     // Checks for fraud
     const transactions = await Transaction.find({
@@ -109,9 +108,13 @@ router.post("/", auth, async (req, res) => {
             email.email
           );
           otp.gentoken(req.user.id, emailDecrypted);
-          return res.send(user.id,"wow");
+          return res.json({
+            userInfo: req.user.id,
+            transaction: transaction,
+            account: account,
+            recipient: recipient,
+          });
         } else {
-          
           // Save to DB
           await transaction.save();
           await account.save();
@@ -162,6 +165,18 @@ router.get("/predict", auth, async (req, res) => {
       res.send(predictionAmount);
     }
   );
+});
+
+router.post("/otp", async (req, res) => {
+  console.log(req.body);
+  if (otp.checktoken(req.body.otp, req.body.userID)) {
+    await req.body.transaction.save();
+    await req.body.account.save();
+    await req.body.recipient.save();
+    return res.json(transaction);
+  }
+
+  res.status(400).send("Invalid one time passcode.");
 });
 
 module.exports = router;

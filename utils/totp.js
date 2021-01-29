@@ -14,6 +14,7 @@ const gentoken = (user, address) => {
     window: 1,
     step: 300,
   });
+  console.log(token);
   const text = "Your Two-Factor Authentication code is: " + token;
   const html = "<h3>Your One-Time Password is: " + token + "</h3>";
   emailTool.sendEmail(

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import TwoFAForm from "./2FAForm.jsx";
+import TwoFAForm from "./2FAFormFraud.jsx";
 
 class PaymentsPage extends Component {
   constructor(props) {
@@ -18,7 +18,13 @@ class PaymentsPage extends Component {
       recipientEmail: "",
       currentBalance: 0,
       amount: 0,
-      user_info: ""
+      user_info: "",
+      fraudulent: false,
+
+      userID: "",
+      account: "",
+      recipient: "",
+      transaction: "",
     };
   }
 
@@ -69,8 +75,6 @@ class PaymentsPage extends Component {
     });
   }
 
-
-
   onChangeRecipient(event) {
     this.setState({ recipientID: event.target.value.split("-")[0] });
     this.setState({ recipientEmail: event.target.value.split("-")[1] });
@@ -86,9 +90,16 @@ class PaymentsPage extends Component {
       this.state.user_info.userId,
       this.state.recipientID,
       this.state.amount,
-      (error) => {
+      (error, data) => {
         if (error) {
           return alert("Payment Failed");
+        }
+        if (data.data.account) {
+          this.setState({ account: data.data.account });
+          this.setState({ recipient: data.data.recipient });
+          this.setState({ transaction: data.data.transaction });
+          this.setState({ userID: data.data.transaction.userId });
+          return this.setState({ fraudulent: true });
         }
         alert(
           `Payment to acccount ${this.state.recipientID} sent successfully.`
@@ -182,6 +193,14 @@ class PaymentsPage extends Component {
             </div>
           </div>
         </div>
+        {this.state.fraudulent && (
+          <TwoFAForm
+            account={this.state.account}
+            recipient={this.state.recipient}
+            transaction={this.state.transaction}
+            userID={this.state.userID}
+          />
+        )}
       </div>
     );
   }

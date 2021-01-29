@@ -180,7 +180,13 @@ class ApplicationPage extends Component {
       });
   }
 
-  changePassword(inputNewPassword, confirmPassword, currentPassword, email, callback) {
+  changePassword(
+    inputNewPassword,
+    confirmPassword,
+    currentPassword,
+    email,
+    callback
+  ) {
     console.log(this.JWTToken);
     console.log(currentPassword);
     console.log(inputNewPassword);
@@ -194,12 +200,12 @@ class ApplicationPage extends Component {
       },
     };
     const body = {
-      "password": currentPassword,
-      "newPassword": inputNewPassword,
-      "password2": confirmPassword,
-      "email": email,
-    }
-    
+      password: currentPassword,
+      newPassword: inputNewPassword,
+      password2: confirmPassword,
+      email: email,
+    };
+
     const changePassword = axios
       .post("/api/users/password", body, config)
       .then(() => {
@@ -225,12 +231,12 @@ class ApplicationPage extends Component {
 
     const sendPayment = axios
       .post("/api/transactions", body, config)
-      .then(() => {
-        callback(undefined);
+      .then((data) => {
+        callback(undefined, data);
       })
       .catch((error) => {
         console.log(error);
-        callback(error);
+        callback(error, undefined);
       });
   }
 
