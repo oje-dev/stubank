@@ -9,19 +9,22 @@ class PaymentsPage extends Component {
     this.onSubmitPayment = this.onSubmitPayment.bind(this);
     this.onChangeRecipient = this.onChangeRecipient.bind(this);
     this.onChangeAmount = this.onChangeAmount.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
 
     this.state = {
       payeesList: [],
       recipientID: "",
-      recipientName: "",
+      recipientEmail: "",
       currentBalance: 0,
       amount: 0,
+      user_info: ""
     };
   }
 
   componentDidMount() {
     this.getCurrentBalance();
     this.getPayees();
+    this.getUserInfo();
   }
 
   getCurrentBalance() {
@@ -33,13 +36,23 @@ class PaymentsPage extends Component {
     });
   }
 
+  getUserInfo() {
+    this.props.getUserInfo((error, data) => {
+      if (error) {
+        return this.setState({
+          user_info: { title: "AuthError", firstname: "AuthError" },
+        });
+      }
+      this.setState({ user_info: data.data });
+    });
+  }
+
   getPayees() {
     this.props.getPayees((error, data) => {
       if (error) {
         return this.setState({
           payeesList: [
             {
-              payeeName: "AuthError",
               payeeID: "AuthError",
               payeeEmail: "AuthError",
             },
@@ -50,14 +63,16 @@ class PaymentsPage extends Component {
       this.setState({ payeesList: data.data.payees });
       if (data.data.payees.length !== 0) {
         this.setState({ recipientID: data.data.payees[0].payeeID });
-        this.setState({ recipientName: data.data.payees[0].payeeName });
+        this.setState({ recipientEmail: data.data.payees[0].payeeEmail });
       }
     });
   }
 
+
+
   onChangeRecipient(event) {
     this.setState({ recipientID: event.target.value.split("-")[0] });
-    this.setState({ recipientName: event.target.value.split("-")[1] });
+    this.setState({ recipientEmail: event.target.value.split("-")[1] });
   }
 
   onChangeAmount(event) {
@@ -67,13 +82,12 @@ class PaymentsPage extends Component {
   onSubmitPayment(event) {
     event.preventDefault();
     this.props.sendPayment(
-      this.state.accountId /* I don't know how to get sent from ID */,
+      this.state.user_info.userId,
       this.state.recipientID,
-      this.state.currentBalanceamount,
-      this.state.recipientName,
+      this.state.amount,
       (error) => {
         if (error) {
-          return alert("Details incorrect.\nPayment Failed");
+          return alert("Payment Failed");
         }
         alert(
           `Payment to acccount ${this.state.recipientID} sent successfully.`
@@ -122,9 +136,9 @@ class PaymentsPage extends Component {
                               return (
                                 <option
                                   key={index}
-                                  value={payee.payeeID + "-" + payee.payeeName}
+                                  value={payee.payeeID + "-" + payee.payeeEmail}
                                 >
-                                  {payee.payeeName + " " + payee.payeeID}
+                                  {payee.payeeEmail + " " + payee.payeeID}
                                 </option>
                               );
                             })}

@@ -30,9 +30,9 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
     const newPayee = await User.findOne({ emailHashed }).select("accountId");
 
     const user = await User.findById(req.user.id);
-
-    if (newPayee === req.user.id) {
-      return res.json({ msg: "Cant add yourself as payee" });
+    
+    if (newPayee["id"] === req.user.id) {
+      return res.status(400).send("Your cannot add yourself as a payee");
     }
 
     let name = await User.findOne({ accountId: newPayee.accountId }).select(
@@ -50,14 +50,10 @@ router.put("/", [auth, [requireEmailExists]], async (req, res) => {
     newPayeeObj.payeeEmail = email;
     newPayeeObj.payeeName = name;
 
-    console.log(newPayeeObj);
-    console.log(user.payees);
-
     // Check if payee is already saved
-    if (user.payees.includes(newPayeeObj)) {
-      return res.json({ msg: "Payee already saved" });
+    if (user.payees.toString().includes(newPayeeObj.payeeID)) {
+      return res.status(400).send("Your cannot add yourself as a payee");
     }
-
     user.payees.push(newPayeeObj);
 
     await user.save();
@@ -92,14 +88,21 @@ router.delete("/", auth, async (req, res) => {
 
     // Check if payee exists in users saved payees
     if (!user.payees.toString().includes(req.body.id)) {
-      return res.json({ msg: "Payee is not saved" });
+      return res.status(401).json({ msg: "Payee is not saved" });
     }
 
     // Get remove index
-    const removeIndex = user.payees
-      .map((payee) => payee.id.toString())
-      .indexOf(req.body.id);
-
+    let i=0;
+    let removeIndex =-1;
+    for(i in user.payees) {
+      if (user.payees[i]["payeeID"].toString()===req.body.id){
+        removeIndex=i;
+      }
+    }
+    
+    // const removePayeeList = await user.payees.map((payee) => {
+    //   payee.payeeID.toString();
+    // });
     user.payees.splice(removeIndex, 1);
 
     await user.save();
