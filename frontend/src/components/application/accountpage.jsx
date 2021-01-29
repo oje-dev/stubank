@@ -89,7 +89,7 @@ class AccountPage extends Component {
       this.state.newPassword,
       this.state.confirmPassword,
       this.state.currentPassword,
-      this.state.email,
+      this.state.userInfo.email,
       (error) => {
         if (error) {
           return alert("Your current password is incorrect.");

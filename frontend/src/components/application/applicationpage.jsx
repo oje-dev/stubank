@@ -180,8 +180,12 @@ class ApplicationPage extends Component {
       });
   }
 
-  changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
+  changePassword(inputNewPassword, confirmPassword, currentPassword, email, callback) {
     console.log(this.JWTToken);
+    console.log(currentPassword);
+    console.log(inputNewPassword);
+    console.log(confirmPassword);
+    console.log(email);
 
     const config = {
       headers: {
@@ -190,11 +194,12 @@ class ApplicationPage extends Component {
       },
     };
     const body = {
-      newPassword: inputNewPassword,
-      password: currentPassword,
-      password2: confirmPassword,
-    };
-
+      "password": currentPassword,
+      "newPassword": inputNewPassword,
+      "password2": confirmPassword,
+      "email": email,
+    }
+    
     const changePassword = axios
       .post("/api/users/password", body, config)
       .then(() => {
