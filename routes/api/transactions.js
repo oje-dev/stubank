@@ -168,11 +168,22 @@ router.get("/predict", auth, async (req, res) => {
 });
 
 router.post("/otp", async (req, res) => {
-  console.log(req.body);
-  if (otp.checktoken(req.body.otp, req.body.userID)) {
-    await req.body.transaction.save();
-    await req.body.account.save();
-    await req.body.recipient.save();
+  if (otp.checktoken(req.body.data.otp, req.body.data.userId)) {
+    // let account = await Account.findById(transaction.sentFrom);
+    // let recipient = await Account.findById(transaction.sentTo);
+    // await account.updateOne({ $set: updateSender }, { new: true });
+
+    // await recipient.updateOne({ $set: updateReciever }, { new: true });
+    let transaction=new Transaction(req.body.data.transaction);
+    let account = await Account.findById(req.body.data.transaction.sentFrom);
+    let recipient = await Account.findById(req.body.data.transaction.sentTo);
+
+    await account.updateOne({$set: req.body.data.account}, { new: true });
+    await recipient.updateOne({ $set: req.body.data.recipient }, { new: true });
+
+    await transaction.save();
+    await account.save();
+    await recipient.save();
     return res.json(transaction);
   }
 

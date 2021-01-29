@@ -19,6 +19,7 @@ class TwoFAForm extends Component {
       if (error) {
         return alert("Incorrect Code");
       }
+      alert("Payment Successful!")
       window.location.replace("/application");
     });
   }
@@ -28,21 +29,17 @@ class TwoFAForm extends Component {
   }
 
   sendRequest(callback) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const body = {
-      otp: this.state.otp,
-      userId: this.props.userID,
-      recipient: this.props.recipient,
-      account: this.props.account,
-      transaction: this.props.transaction,
-    };
-
     axios
-      .post("/api/transactions/otp", this.state, body, config)
+      .post("/api/transactions/otp",  {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        data: {otp: this.state.otp,
+          userId: this.props.userID,
+          recipient: this.props.recipient,
+          account: this.props.account,
+          transaction: this.props.transaction,},
+      })
       .then((response) => {
         if (response.data.errors) {
           throw response.data.errors;
