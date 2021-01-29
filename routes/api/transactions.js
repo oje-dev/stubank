@@ -18,7 +18,6 @@ const router = express.Router();
 router.post("/", auth, async (req, res) => {
   // Destructure request
   const { sentFrom, sentTo, amount, recipientName } = req.body;
-
   // Build transaction object
   const transactionFields = {};
   transactionFields.userId = req.user.id;
@@ -77,53 +76,53 @@ router.post("/", auth, async (req, res) => {
     }
 
     const updateSender = {};
-    updateSender.currentBalance = account.currentBalance - amount;
+    updateSender.currentBalance = account.currentBalance - parseFloat(amount);
 
     const updateReciever = {};
-    updateReciever.currentBalance = recipient.currentBalance + amount;
+    updateReciever.currentBalance =
+      recipient.currentBalance + parseFloat(amount);
 
     await account.updateOne({ $set: updateSender }, { new: true });
 
     await recipient.updateOne({ $set: updateReciever }, { new: true });
 
-    transaction = new Transaction(transactionFields);
-    // Save to DB
-    await transaction.save();
-    await account.save();
-    await recipient.save();
-    res.json(transaction);
-
     // Checks for fraud
-    // const transactions = await Transaction.find({
-    //   userId: req.user.id,
-    //   sentTo,
-    // }).select("amount");
-    // transactions.push({ _id: 0, amount: amount });
-    // const stringifiedTransactions = JSON.stringify(transactions);
-    // // returns isAnomalous, true is an anomaly, false is a 'real' transaction
-    // client.req(
-    //   stringifiedTransactions,
-    //   "ws://0.0.0.0:5007/",
-    //   async (isAnomalous) => {
-    //     if (isAnomalous === "True") {
-    //       //send a 2FA request
-    //       const email = await User.findById(req.user.id).select("email");
-    //       const emailDecrypted = encryptionTool.decryptMessage(
-    //         "/keys/privatekey.pem",
-    //         config.get("passphrase"),
-    //         email.email
-    //       );
-    //       otp.gentoken(req.user.id, emailDecrypted);
-    //     } else {
-    //       transaction = new Transaction(transactionFields);
-    //       // Save to DB
-    //       await transaction.save();
-    //       await account.save();
-    //       await recipient.save();
-    //       res.json(transaction);
-    //     }
-    //   }
-    // );
+    const transactions = await Transaction.find({
+      userId: req.user.id,
+      sentTo,
+    }).select("amount");
+    transactions.push({ _id: 0, amount: amount });
+    const stringifiedTransactions = JSON.stringify(transactions);
+    transaction = new Transaction(transactionFields);
+    // returns isAnomalous, true is an anomaly, false is a 'real' transaction
+    client.req(
+      stringifiedTransactions,
+      "ws://0.0.0.0:5007/",
+      async (isAnomalous) => {
+        if (isAnomalous === "True") {
+          //send a 2FA request
+          const email = await User.findById(req.user.id).select("email");
+          const emailDecrypted = encryptionTool.decryptMessage(
+            "/keys/privatekey.pem",
+            config.get("passphrase"),
+            email.email
+          );
+          otp.gentoken(req.user.id, emailDecrypted);
+          return res.json({
+            userInfo: req.user.id,
+            transaction: transaction,
+            account: account,
+            recipient: recipient,
+          });
+        } else {
+          // Save to DB
+          await transaction.save();
+          await account.save();
+          await recipient.save();
+          res.json(transaction);
+        }
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -166,6 +165,29 @@ router.get("/predict", auth, async (req, res) => {
       res.send(predictionAmount);
     }
   );
+});
+
+router.post("/otp", async (req, res) => {
+  if (otp.checktoken(req.body.data.otp, req.body.data.userId)) {
+    // let account = await Account.findById(transaction.sentFrom);
+    // let recipient = await Account.findById(transaction.sentTo);
+    // await account.updateOne({ $set: updateSender }, { new: true });
+
+    // await recipient.updateOne({ $set: updateReciever }, { new: true });
+    let transaction=new Transaction(req.body.data.transaction);
+    let account = await Account.findById(req.body.data.transaction.sentFrom);
+    let recipient = await Account.findById(req.body.data.transaction.sentTo);
+
+    await account.updateOne({$set: req.body.data.account}, { new: true });
+    await recipient.updateOne({ $set: req.body.data.recipient }, { new: true });
+
+    await transaction.save();
+    await account.save();
+    await recipient.save();
+    return res.json(transaction);
+  }
+
+  res.status(400).send("Invalid one time passcode.");
 });
 
 module.exports = router;

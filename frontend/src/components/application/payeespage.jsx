@@ -1,8 +1,4 @@
 import React, { Component } from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 
 class PayeesPage extends Component {
   constructor(props) {
@@ -31,7 +27,6 @@ class PayeesPage extends Component {
         return this.setState({
           payeesList: [
             {
-              payeeName: "AuthError",
               payeeID: "AuthError",
               payeeEmail: "AuthError",
             },
@@ -51,7 +46,7 @@ class PayeesPage extends Component {
     this.props.addPayee(this.state.addPayee, (error) => {
       if (error) {
         return alert(
-          `A user with email address: ${this.state.addPayee} does not exist.`
+          `The user with email address "${this.state.addPayee}" Either does not exist, is yourself or is already one of your payees.`
         );
       }
       alert("Payee Added Successfully");
@@ -68,7 +63,7 @@ class PayeesPage extends Component {
     this.props.deletePayee(this.state.deletePayee, (error) => {
       if (error) {
         return alert(
-          `A user with ID: ${this.state.deletePayee} does not exist.`
+          `You have no payees with id "${this.state.deletePayee}"`
         );
       }
       alert("Payee Deleted Successfully");
@@ -100,16 +95,6 @@ class PayeesPage extends Component {
                     fontSize: "0.9em",
                   }}
                 >
-                  Payee Name
-                </div>
-                <div
-                  className="col text-center recent-payment-header"
-                  style={{
-                    color: "black",
-                    marginTop: "0.5em",
-                    fontSize: "0.9em",
-                  }}
-                >
                   Payee ID
                 </div>
                 <div
@@ -126,12 +111,6 @@ class PayeesPage extends Component {
               {this.state.payeeList.map((payee, index) => {
                 return (
                   <div key={index} className="row">
-                    <div
-                      className="col text-center"
-                      style={{ fontSize: "0.8em" }}
-                    >
-                      {payee.payeeName}
-                    </div>
                     <div
                       className="col text-center"
                       style={{ fontSize: "0.8em" }}

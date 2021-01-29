@@ -121,14 +121,14 @@ class ApplicationPage extends Component {
   }
 
   getPayees(callback) {
-const config = { headers: {
-  "x-auth-token": this.JWTToken
-}}
+    const config = {
+      headers: {
+        "x-auth-token": this.JWTToken,
+      },
+    };
 
     const payeesList = axios
-      .get("/api/payees", config
-
-      )
+      .get("/api/payees", config)
       .then((data) => {
         callback(undefined, data);
       })
@@ -140,17 +140,18 @@ const config = { headers: {
 
   addPayee(payeeEmail, callback) {
     console.log(this.JWTToken);
-    const config = { headers: {
-      "Content-Type": "application/json",
-      "x-auth-token": this.JWTToken
-    }
-  }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": this.JWTToken,
+      },
+    };
     const body = {
-      "email": payeeEmail 
-    }
-    
+      email: payeeEmail,
+    };
+
     const addPayeeReq = axios
-      .put("/api/payees",body, config)
+      .put("/api/payees", body, config)
       .then((data) => {
         callback(undefined, data);
       })
@@ -162,11 +163,15 @@ const config = { headers: {
 
   deletePayee(payeeID, callback) {
     console.log(this.JWTToken);
-    
-    const deletePayee = axios.delete("/api/payees", {headers: {
-      "Content-Type": "application/json",
-      "x-auth-token": this.JWTToken
-    }, data: {"id": payeeID}})
+
+    const deletePayee = axios
+      .delete("/api/payees", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": this.JWTToken,
+        },
+        data: { id: payeeID },
+      })
       .then((data) => {
         callback(undefined, data);
       })
@@ -175,20 +180,32 @@ const config = { headers: {
       });
   }
 
-  changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
+  changePassword(
+    inputNewPassword,
+    confirmPassword,
+    currentPassword,
+    email,
+    callback
+  ) {
     console.log(this.JWTToken);
+    console.log(currentPassword);
+    console.log(inputNewPassword);
+    console.log(confirmPassword);
+    console.log(email);
 
-    const config = { headers: {
-      "Content-Type": "application/json",
-      "x-auth-token": this.JWTToken
-    }
-  }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": this.JWTToken,
+      },
+    };
     const body = {
-      "newPassword": inputNewPassword,
-      "password": currentPassword,
-      "password2": confirmPassword,
-    }
-    
+      password: currentPassword,
+      newPassword: inputNewPassword,
+      password2: confirmPassword,
+      email: email,
+    };
+
     const changePassword = axios
       .post("/api/users/password", body, config)
       .then(() => {
@@ -199,27 +216,27 @@ const config = { headers: {
       });
   }
 
-  sendPayment(sentFrom, sentTo, amount, recipientName, callback) {
-    console.log(this.JWTToken);
-    
-    const config = { headers: {
-      "Content-Type": "application/json",
-      "x-auth-token": this.JWTToken
-    }
-  }
+  sendPayment(sentFrom, sentTo, amount, callback) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": this.JWTToken,
+      },
+    };
     const body = {
-      "sentFrom": sentFrom,
-      "sentTo": sentTo,
-      "Amount": amount,
-    }
-    
+      sentFrom: sentFrom,
+      sentTo: sentTo,
+      amount: amount,
+    };
+
     const sendPayment = axios
       .post("/api/transactions", body, config)
-      .then(() => {
-        callback(undefined);
+      .then((data) => {
+        callback(undefined, data);
       })
       .catch((error) => {
-        callback(error);
+        console.log(error);
+        callback(error, undefined);
       });
   }
 
@@ -250,6 +267,7 @@ const config = { headers: {
             currencyFormatter={this.formatCurrency}
             getPayees={this.getPayees}
             sendPayment={this.sendPayment}
+            getUserInfo={this.getUserInfo}
           />
         ),
       };

@@ -26,7 +26,7 @@ const sendGrid = require("@sendgrid/mail");
 
 // Try not to share anywhere please.
 const apiKey =
-  "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";
+  "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";
 
 sendGrid.setApiKey(apiKey);
 

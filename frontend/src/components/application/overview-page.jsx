@@ -101,7 +101,7 @@ class OverviewPage extends Component {
                       variant="info"
                       style={{ marginLeft: "0.5em" }}
                     >
-                      ?
+                      <strong style={{ color: "black" }}>?</strong>
                     </Button>
                   </OverlayTrigger>
                   <SpendingBar
