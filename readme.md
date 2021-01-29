@@ -16,3 +16,7 @@ Running Stubank:
 
 * To simulate a "deposit" Into your account, please run "node cli.js" and follow the prompts.
 
+* OTP codes are printed to node server console. This is for ease of testing and incase our Email API runs out of emails.
+
+
+

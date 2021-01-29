@@ -3,7 +3,7 @@
 - standing orders
 - setting and viewing budgets - which would correspond with the predicted machine learning
 - implementing account freezing (the back end code has been written for it but there is nothing for it on the front end)
-- savings pots and savings pots UI
+- savings pots and savings pots UI 
 
 - an FAQ
 - forgot password
@@ -16,3 +16,7 @@
 - An OTP resend button
 
 - Spendings breakdown with charts
+
+- Implementing unit tests for the front end
+
+- mobile app

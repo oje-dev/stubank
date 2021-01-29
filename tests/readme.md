@@ -1,0 +1,1 @@
+Due to the additon of One time password authentication, the only testing methods that currently function are , fraudvalidtest and predicttest.

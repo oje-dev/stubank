@@ -92,7 +92,7 @@ class AccountPage extends Component {
       this.state.userInfo.email,
       (error) => {
         if (error) {
-          return alert("Your current password is incorrect.");
+          return alert("Your current password is incorrect, or your new password is Invalid");
         }
         alert("Successfully changed password\nPlease login again");
         sessionStorage.removeItem("x-auth-token");

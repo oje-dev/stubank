@@ -13,9 +13,8 @@ def fraudcheck(amounts, tocheck):
     cls.fit(array)
     # return machine learning value and convert to decimal
     isoutlier = cls.decision_function(tocheck)
-    realnum = isoutlier / -10000000000
     # check if the value is within a specified local outlier factor (this is half the distance)
-    if realnum > 75:
+    if isoutlier < -20:
         anomaly = True
     return anomaly
 
