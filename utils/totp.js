@@ -15,6 +15,7 @@ const gentoken = (user, address) => {
     step: 300,
   });
   const text = "Your Two-Factor Authentication code is: " + token;
+  console.log("The 2fa token is : ",token," (this is printed here for testing purposes, incase our SMTP server is down or you used a dummy email and could not retrieve the OTP code.");
   const html = "<h3>Your One-Time Password is: " + token + "</h3>";
   emailTool.sendEmail(
     {
