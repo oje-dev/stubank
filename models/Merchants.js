@@ -14,5 +14,3 @@ const MerchantSchema = new mongoose.Schema({
     default: "fas fa-store",
   },
 });
-
-//Merchant id and category and category images

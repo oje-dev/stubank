@@ -6,6 +6,7 @@ const encryptionTool = require("../../utils/encryptiontool");
 const User = require("../../models/User");
 
 module.exports = {
+  // Checks supplied email against the database
   requireEmailExists: check("email", "Please include a valid email")
     .trim()
     .isEmail()
@@ -21,6 +22,7 @@ module.exports = {
       }
     }),
 
+  // Checks supplied password against the database
   requireValidPassword: check("password", "Password is required")
     .trim()
     .custom(async (password, { req }) => {

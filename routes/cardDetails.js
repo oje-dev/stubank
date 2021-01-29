@@ -1,5 +1,9 @@
 var crypto = require("crypto");
 
+/**
+ * Generates cryptographically secure number
+ * @param byteArray - Random bytes
+ */
 function byteArrayToInt(byteArray) {
   var value = 0;
   for (var i = byteArray.length - 1; i >= 0; i--) {

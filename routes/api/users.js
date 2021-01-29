@@ -1,10 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { validationResult, header } = require("express-validator");
 const config = require("config");
 const otp = require("../../utils/totp");
-const { requireValidPassword } = require("../../middleware/validators/login");
 
 const auth = require("../../middleware/auth");
 const encryptionTool = require("../../utils/encryptiontool");
@@ -22,6 +20,7 @@ const {
   requirePassword,
   requirePasswordConfirmation,
 } = require("../../middleware/validators/registration");
+const { requireValidPassword } = require("../../middleware/validators/login");
 const { genDetails } = require("../cardDetails");
 
 // Import DB
@@ -112,6 +111,7 @@ router.post(
       // Create DB instance
       user = new User(encryptedData);
 
+      // Creates bank account
       const newAccount = {};
       newAccount.userId = user.id;
       newAccount.cardNumber = encryptionTool.encryptMessage(
@@ -131,8 +131,7 @@ router.post(
       await user.save();
       await account.save();
 
-      // Change to how front end wants it
-
+      // Sends otp email
       otp.gentoken(user.id, req.body.email);
 
       res.send(user.id);
@@ -221,6 +220,7 @@ router.post(
       // Hashes password
       newPassword = await bcrypt.hash(newPassword, salt);
 
+      // Encrypts password
       user.password = encryptionTool.encryptMessage(
         "keys/publickey.pem",
         newPassword
