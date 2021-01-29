@@ -20,7 +20,7 @@ class SpendingBar extends Component {
   componentDidMount() {
     this.getCurrentBalance();
   }
-
+  // calculates percentage of predicted spending out of account balance, then shows this as a progress bar
   getPercentage() {
     const percentageSpent =
       Math.floor(

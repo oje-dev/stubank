@@ -27,7 +27,7 @@ class DigitalCard extends React.Component {
     let formattedNumber = cardNumber.match(/.{1,4}/g);
     return formattedNumber.join(" ");
   }
-
+//gets card details 
   getCardDetails() {
     this.props.getDigitalCard((error, data) => {
       if (error) {
@@ -42,7 +42,6 @@ class DigitalCard extends React.Component {
       });
     });
   }
-
   getUserDetails() {
     this.props.getUserInfo((error, data) => {
       if (error) {

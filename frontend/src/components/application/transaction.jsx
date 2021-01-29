@@ -12,6 +12,7 @@ class Transaction extends Component {
                 .substring(2, 10)
                 .concat(" ")
                 .concat(
+                  //makes date in readable format
                   this.props.transaction_info.date.split("T")[1].substring(0, 5)
                 )}
           </div>

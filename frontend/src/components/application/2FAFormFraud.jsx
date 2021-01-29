@@ -12,7 +12,7 @@ class TwoFAForm extends Component {
 
     this.state = { otp: "" };
   }
-
+/**if otp correct send payment through */
   onSubmit(e) {
     e.preventDefault();
     this.sendRequest((error, data) => {
@@ -27,7 +27,7 @@ class TwoFAForm extends Component {
   onChangeOTP(e) {
     this.setState({ otp: e.target.value });
   }
-
+/**sends otp to backend along with transaction data*/
   sendRequest(callback) {
     axios
       .post("/api/transactions/otp",  {

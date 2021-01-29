@@ -2,7 +2,7 @@
 Running Stubank:
 (we use ports 5000,500)
 1. run "pip install -r requirements.txt" in this folder
-2. run "npm i" in this folder (make sure dev dependencies get installed)
+2. run "npm i" in this folder (make sure dev dependencies get installed as sometimes they don't install. Please install them manually if this is the case.)
 3. run "npm i" in ./frontend
 4. run the following commands, each in their own terminal:
    "python machinelearning/fraud/fraudserver.py"

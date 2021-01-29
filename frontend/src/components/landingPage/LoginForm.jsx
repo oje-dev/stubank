@@ -78,7 +78,6 @@ class LoginForm extends Component {
       password: event.target.value,
     });
   }
-
   onSubmit(event) {
     event.preventDefault();
     this.sendRequest((error, data) => {
@@ -88,7 +87,6 @@ class LoginForm extends Component {
       this.setState({ form: <TwoFAForm userID={data} /> });
     });
   }
-
   sendRequest(callback) {
     axios
       .post("/api/auth", this.state, {

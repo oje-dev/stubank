@@ -28,7 +28,6 @@ class TwoFAForm extends Component {
   onChangeOTP(e) {
     this.setState({ otp: e.target.value });
   }
-
   sendRequest(callback) {
     axios
       .post("/api/auth/otp", this.state, {

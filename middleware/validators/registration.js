@@ -19,7 +19,11 @@ module.exports = {
     .trim()
     .isMobilePhone(),
 
+<<<<<<< middleware/validators/registration.js
   requireDOB: check("dob", "You must be 18 to register.").isBefore(getDate()),
+=======
+  requireDOB: check("dob","You must be 18 years old").isBefore(getDate()),
+>>>>>>> middleware/validators/registration.js
 
   requireUni: check("uni", "University is required").trim().not().isEmpty(),
 

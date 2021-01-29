@@ -3,14 +3,11 @@ import datetime, pandas as pd, sys, json, numpy as np
 
 
 def fraudcheck(amounts, tocheck):
-    #tocheck = array.reshape(array.shape[0], -1)
-    #groups data by recipient
     anomaly = False
     # get the amounts from the transactions and reshape the array
     amounts = amounts["amount"].values
     array = np.array(amounts)
     array = array.reshape(array.shape[0], -1)
-    array=[[0.01],[0.01]]
     # fit the machine learning
     cls = LocalOutlierFactor(n_neighbors=2, novelty=True)
     cls.fit(array)
@@ -27,10 +24,12 @@ def start(d):
     #create a data frame from data and get the transaction to check
     df = pd.DataFrame(d)
     del df['_id']
-    #If first transaction to a certain recipient, return anomaly=True
-    if len(df)<2:
+    print(len(df))
+    #If 2 or less transactions to a certain recipient, return True
+    if len(df)<3:
         return "True"
     else:
+        #last element is transaction to check
         tocheck = df.tail(1)
         df=df.drop(df.tail(1).index)
         #pass to check transaction
