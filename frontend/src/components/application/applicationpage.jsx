@@ -175,8 +175,12 @@ const config = { headers: {
       });
   }
 
-  changePassword(inputNewPassword, confirmPassword, currentPassword, callback) {
+  changePassword(inputNewPassword, confirmPassword, currentPassword, email, callback) {
     console.log(this.JWTToken);
+    console.log(currentPassword);
+    console.log(inputNewPassword);
+    console.log(confirmPassword);
+    console.log(email);
 
     const config = { headers: {
       "Content-Type": "application/json",
@@ -184,9 +188,10 @@ const config = { headers: {
     }
   }
     const body = {
-      "newPassword": inputNewPassword,
       "password": currentPassword,
+      "newPassword": inputNewPassword,
       "password2": confirmPassword,
+      "email": email,
     }
     
     const changePassword = axios
