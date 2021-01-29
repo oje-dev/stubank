@@ -17,7 +17,6 @@ const router = express.Router();
 // @access  Private
 router.post("/", auth, async (req, res) => {
   // Destructure request
-  console.log(req.body);
   const { sentFrom, sentTo, amount, recipientName } = req.body;
   // Build transaction object
   const transactionFields = {};
@@ -77,53 +76,50 @@ router.post("/", auth, async (req, res) => {
     }
 
     const updateSender = {};
-    updateSender.currentBalance = account.currentBalance - amount;
+    updateSender.currentBalance = account.currentBalance -parseFloat(amount);
 
     const updateReciever = {};
-    updateReciever.currentBalance = recipient.currentBalance + amount;
+    updateReciever.currentBalance = recipient.currentBalance + parseFloat(amount);
 
     await account.updateOne({ $set: updateSender }, { new: true });
 
     await recipient.updateOne({ $set: updateReciever }, { new: true });
 
-    transaction = new Transaction(transactionFields);
-    // Save to DB
-    await transaction.save();
-    await account.save();
-    await recipient.save();
-    res.json(transaction);
+ 
 
     // Checks for fraud
-    // const transactions = await Transaction.find({
-    //   userId: req.user.id,
-    //   sentTo,
-    // }).select("amount");
-    // transactions.push({ _id: 0, amount: amount });
-    // const stringifiedTransactions = JSON.stringify(transactions);
-    // // returns isAnomalous, true is an anomaly, false is a 'real' transaction
-    // client.req(
-    //   stringifiedTransactions,
-    //   "ws://0.0.0.0:5007/",
-    //   async (isAnomalous) => {
-    //     if (isAnomalous === "True") {
-    //       //send a 2FA request
-    //       const email = await User.findById(req.user.id).select("email");
-    //       const emailDecrypted = encryptionTool.decryptMessage(
-    //         "/keys/privatekey.pem",
-    //         config.get("passphrase"),
-    //         email.email
-    //       );
-    //       otp.gentoken(req.user.id, emailDecrypted);
-    //     } else {
-    //       transaction = new Transaction(transactionFields);
-    //       // Save to DB
-    //       await transaction.save();
-    //       await account.save();
-    //       await recipient.save();
-    //       res.json(transaction);
-    //     }
-    //   }
-    // );
+    const transactions = await Transaction.find({
+      userId: req.user.id,
+      sentTo,
+    }).select("amount");
+    transactions.push({ _id: 0, amount: amount });
+    const stringifiedTransactions = JSON.stringify(transactions);
+    transaction = new Transaction(transactionFields);
+    // returns isAnomalous, true is an anomaly, false is a 'real' transaction
+    client.req(
+      stringifiedTransactions,
+      "ws://0.0.0.0:5007/",
+      async (isAnomalous) => {
+        if (isAnomalous === "True") {
+          //send a 2FA request
+          const email = await User.findById(req.user.id).select("email");
+          const emailDecrypted = encryptionTool.decryptMessage(
+            "/keys/privatekey.pem",
+            config.get("passphrase"),
+            email.email
+          );
+          otp.gentoken(req.user.id, emailDecrypted);
+          return res.send(user.id,"wow");
+        } else {
+          
+          // Save to DB
+          await transaction.save();
+          await account.save();
+          await recipient.save();
+          res.json(transaction);
+        }
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

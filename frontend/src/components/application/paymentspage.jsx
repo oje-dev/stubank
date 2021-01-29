@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import TwoFAForm from "./2FAForm.jsx";
 
 class PaymentsPage extends Component {
   constructor(props) {
