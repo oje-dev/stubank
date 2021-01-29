@@ -6,7 +6,8 @@ import AccountPage from "./accountpage.jsx";
 import PayeesPage from "./payeespage.jsx";
 import InvalidAuth from "./invalidauth.jsx";
 import AppNavbar from "./app-navbar.jsx";
-
+// The axios requests for all methods connecting the front end and back end.
+// Also sends and recieves data between the front and back end
 class ApplicationPage extends Component {
   constructor(props) {
     super(props);

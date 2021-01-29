@@ -51,7 +51,7 @@ class AccountPage extends Component {
       .concat("/")
       .concat(dateComponents[0]);
   }
-
+//gets account info from props
   getAccountInfo() {
     this.props.getUserInfo((error, data) => {
       if (error) {

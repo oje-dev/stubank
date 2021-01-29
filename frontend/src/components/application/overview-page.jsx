@@ -13,16 +13,18 @@ class OverviewPage extends Component {
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
     this.getCurrentBalance = this.getCurrentBalance.bind(this);
-
+    this.getPredictedSpending = this.getPredictedSpending.bind(this)
     this.state = {
       current_balance: 0,
       user_info: "",
+      predictedSpend: 0,
     };
   }
 
   componentDidMount() {
     this.getUserInfo();
     this.getCurrentBalance();
+    this.getPredictedSpending();
   }
 
   getCurrentBalance() {
@@ -35,7 +37,14 @@ class OverviewPage extends Component {
       });
     });
   }
-
+  getPredictedSpending() {
+    this.props.getPredictedSpending((error, data) => {
+      if (error) {
+        return this.setState({ predictedSpend: 0 });
+      }
+      this.setState({ predictedSpend: data.data });
+    });
+  }
   getUserInfo() {
     this.props.getUserInfo((error, data) => {
       if (error) {
@@ -92,6 +101,8 @@ class OverviewPage extends Component {
                           algorithm learns from your transaction history and
                           will become more accurate as you use your
                           <strong> Stubank©</strong> account.
+                          <br />
+                          Your predicted spend: <strong> {this.props.formatCurrency(this.state.predictedSpend)}</strong>
                         </Popover.Content>
                       </Popover>
                     }

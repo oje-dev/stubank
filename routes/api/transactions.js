@@ -82,9 +82,7 @@ router.post("/", auth, async (req, res) => {
     updateReciever.currentBalance =
       recipient.currentBalance + parseFloat(amount);
 
-    await account.updateOne({ $set: updateSender }, { new: true });
 
-    await recipient.updateOne({ $set: updateReciever }, { new: true });
 
     // Checks for fraud
     const transactions = await Transaction.find({
@@ -115,6 +113,8 @@ router.post("/", auth, async (req, res) => {
             recipient: recipient,
           });
         } else {
+          await account.updateOne({ $set: updateSender }, { new: true });
+          await recipient.updateOne({ $set: updateReciever }, { new: true });
           // Save to DB
           await transaction.save();
           await account.save();
@@ -177,7 +177,10 @@ router.post("/otp", async (req, res) => {
     let transaction=new Transaction(req.body.data.transaction);
     let account = await Account.findById(req.body.data.transaction.sentFrom);
     let recipient = await Account.findById(req.body.data.transaction.sentTo);
-
+    console.log(account.currentBalance);
+    account.currentBalance = account.currentBalance - parseFloat(transaction.amount)
+    recipient.currentBalance = recipient.currentBalance + parseFloat(transaction.amount)
+    console.log(account.currentBalance);
     await account.updateOne({$set: req.body.data.account}, { new: true });
     await recipient.updateOne({ $set: req.body.data.recipient }, { new: true });
 

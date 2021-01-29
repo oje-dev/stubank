@@ -7,6 +7,7 @@ class TransferList extends React.Component {
 
     this.transfers = this.getTransfers();
   }
+// could not be implemented within the deadline
 
   getTransfers() {
     const transfers = [

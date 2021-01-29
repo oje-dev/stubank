@@ -314,7 +314,6 @@ class CreateAccountForm extends Component {
     if (this.state.newPassword !== this.state.password2) {
       return alert("Passwords do not match");
     }
-
     this.sendRequest((error, data) => {
       if (error) {
         let errorMessage = "";
@@ -326,7 +325,6 @@ class CreateAccountForm extends Component {
       this.setState({ form: <TwoFAForm userID={data} /> });
     });
   }
-
   sendRequest(callback) {
     axios
       .post("/api/users", this.state, {

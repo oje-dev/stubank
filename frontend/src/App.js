@@ -5,7 +5,7 @@ import "./App.css";
 import ApplicationPage from "./components/application/applicationpage.jsx";
 import LandingPage from "./components/landingPage/landingpage.jsx";
 import NotFoundPage from "./components/404page.jsx";
-
+//** Sets landing page and other basic pages */
 function App() {
   return (
     <BrowserRouter>
